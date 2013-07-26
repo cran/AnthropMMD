@@ -1,14 +1,14 @@
-74db2771e930d3133096d1f0cb00ba25 *DESCRIPTION
+2161a52721c36243dd5a0964044881cb *DESCRIPTION
 8b54e5a89fbda3af5e077053d40bec76 *NAMESPACE
 395bf4044b995f22c167fb06aff12499 *R/Group_selection.R
 549203f35d47fb08eca6eeb0f8755daa *R/Mat_MMD.R
 4da2b2ff5c093da42bd5f2010460656a *R/Prepa_MMD.R
 fadb60d51b43b348dca622f4cfc3ed0b *R/Protocole_MMD.R
 68955f17f76fbf9eb32347088df27b2f *R/Sel_type_data.R
-f9bd7b0c3b51c228d321eaaef9268336 *R/StartMMD.R
+0ee1c60b35a2ecf1086f9d6873b18689 *R/StartMMD.R
 b2b516a06e77a453dfb4575d92bf099b *R/datafile_details.R
 bbdb4e30ab4afb4919145067a0d09352 *R/selvar.R
-363e2ef359b062a74c8ab7e7476d8685 *man/AnthropMMD-package.Rd
+cbac06218f15bb32ca4a978e8c912dc4 *man/AnthropMMD-package.Rd
 f4c4ce85593b2e4a5d7a9c1eefc3d575 *man/Group_selection.Rd
 85f4d99f11cab91996246de797ea1102 *man/Mat_MMD.Rd
 4b0da3b17586ef72fd6836c29ea5b0e6 *man/Prepa_MMD.Rd

@@ -12,8 +12,8 @@ Offers a complete and interactive GUI to work out a matrix of MMD from a binary 
 \tabular{ll}{
 Package: \tab AnthropMMD\cr
 Type: \tab Package\cr
-Version: \tab 0.9.4\cr
-Date: \tab 2013-02-05\cr
+Version: \tab 0.9.5\cr
+Date: \tab 2013-07-26\cr
 License: \tab GPL (>= 2)\cr
 }
 

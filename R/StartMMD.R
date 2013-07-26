@@ -68,13 +68,39 @@ if (GoOn == 1) {
  tkmessageBox(title = "End", message = "The MMD matrix has been successfully calculated. It will be saved in a CSV file.", icon = "info", type = "ok")
 }
 
+
+# A CE STADE, LA MATRICE RESUL CONTIENT DANS LA PARTIE TRIANGULAIRE SUPERIEURE LES VALEURS DE MMD,
+# ET DANS LA PARTIE TRIANGULAIRE INFERIEURE LES SD DES MMD. ON CREE PLUSIEURS FICHIERS DE RESULTATS.
+if (GoOn == 1) {
+mmdvalues = resul # matrice qui contiendra les valeurs de MMD (symetrique et a diagonale nulle)
+for (i in 1:nrow(resul)) {
+ for (j in 1:ncol(resul)) {
+  if (i > j) {mmdvalues[i,j] = resul[j, i]}
+ }
+}
+
+signif = resul # matrice qui contiendra les valeurs de MMD (symetrique et a diagonale nulle)
+for (i in 1:nrow(resul)) {
+ for (j in 1:ncol(resul)) {
+  if (i > j) {signif[i,j] = NA}
+  else if(i < j) {signif[i,j] = ifelse(resul[i,j]>2*resul[j,i], "*", NA)}
+  else {signif[i,j] = NA} 
+ }
+}
+
+# ET ON AFFICHE LE MDS :
+mds = cmdscale(mmdvalues)
+plot(x=mds[,1], y=mds[,2], xlab="MDS_Axis_1", ylab="MDS_Axis_2", asp=1, axes=FALSE, pch=16, main="MDS performed on MMDs")
+text(x=mds[,1], y=mds[,2], rownames(mds), pos=2)
+}
+
 # ET ON PROPOSE A L'UTILISATEUR DE SAUVEGARDER SA MATRICE DE MMD :
 if (GoOn == 1) {
- fileName<-tclvalue(tkgetSaveFile(filetypes="{{CSV Files} {.csv}}"))
- if (!nchar(fileName)) {
-  tkmessageBox(message="No file was selected!")
- } 
- write.csv2(resul, fileName) # matrice MMD en haut et var en bas
+ print("Significant MMD are indicated by stars :")
+ print(signif)
+ write.csv2(resul, "Results_AnthropMMD_MmdValuesUp_SdDown.csv") # matrice MMD en haut et var en bas
+ write.csv2(mmdvalues, "Results_AnthropMMD_MmdValuesSym.csv") # matrice MMD symetrique a diagonale nulle
+ write.csv2(signif, "Results_AnthropMMD_SignifMmd.csv", na="") # matrice indiquant si les MMD sont significatives ou non
 }
 
 }
