@@ -5,13 +5,13 @@
 The only function to use !
 }
 \description{
-Contains or calls the whole GUI for the package.
+Calls the whole GUI for the package.
 }
 \usage{
 StartMMD()
 }
 \details{
-For more information about this package and its possibility, see the full (separated) documentation written by the author (contact by email).
+For more information about this package, see the full (separated) documentation written by the author (contact by email).
 }
 \value{
 A MMD distance matrix : elements above the diagonal are MMD values (distances), elements below the diagonal are MMD standard deviations. 
