@@ -24,10 +24,10 @@ for (j in 1:nvar) {
 
 noms = rep(NA, 2*nbgroupes)
 for (i in 1:nbgroupes) {
- noms[i] = paste("Eff_", nomgroupe[i], sep="")
+ noms[i] = nomgroupe[i]
 }
 for (i in 1:nbgroupes) {
- noms[i+nbgroupes] = paste("Prop1_", nomgroupe[i], sep="")
+ noms[i+nbgroupes] = paste("1_", nomgroupe[i], sep="")
 }
 
 rownames(sel) = noms
@@ -87,7 +87,7 @@ if (sum(sel)>1) { # s'il y a au moins 2 colonnes selectionnees, on continue
  if (all_vars==FALSE){
   niveaux = rep(NA, ncol(tac))
   for (j in 1:ncol(tac)) {
-   niveaux[j] = ifelse(all(tac[(nb_grp+1):nrow(tac), j] == 0) | all(tac[(nb_grp+1):nrow(tac), j] == 1), FALSE, TRUE) ## VERIFIER !!!
+   niveaux[j] = ifelse(all(tac[(nb_grp+1):nrow(tac), j] == 0) | all(tac[(nb_grp+1):nrow(tac), j] == 1), FALSE, TRUE) 
   }
   tac = tac[ , niveaux]
  }
@@ -97,12 +97,12 @@ if (sum(sel)>1) { # s'il y a au moins 2 colonnes selectionnees, on continue
   for (j in 1:ncol(tac)) {
    tabprov = round(tac[1:nb_grp, j] * tac[(nb_grp+1):nrow(tac), j],1)
    tabprov = abs(tac[1:nb_grp, j] - tabprov) 
-   avirer[j] = ifelse(sum(tabprov)<=1 | sum(tabprov)>=(sum(tac[1:nb_grp, j])-1), FALSE, TRUE) ## VERIFIER !!!
+   avirer[j] = ifelse(sum(tabprov)<=1 | sum(tabprov)>=(sum(tac[1:nb_grp, j])-1), FALSE, TRUE) 
   }
   tac = tac[ , avirer]
  }
 
- rownames(tac) = substr(rownames(tac), 5, nchar(rownames(tac)))
+ rownames(tac) = c(rownames(tac)[1:nb_grp], paste("1_",rownames(tac)[1:nb_grp],sep="")) 
  #write.csv2(tac, "sortie_prep.csv")
  return(tac)
 

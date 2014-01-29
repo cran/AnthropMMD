@@ -51,8 +51,9 @@ for (i in 1:nrow(MMDMatrix)) {
 }
 
 ## RESULTATS SUR LES MESURES DE DIVERGENCE INDIVIDUELLES
-VarMatrix <- as.matrix(Mat_eff[1, ], ncol=1)
+VarMatrix <- matrix(NA, nrow=ncol(Mat_eff), ncol=1)
 colnames(VarMatrix) = "Individual MD"
+rownames(VarMatrix) = colnames(Mat_eff)
 tempMatrix <- matrix(0, nrow=nb_groupes, ncol=nb_groupes)
 
 for (i in 1:ncol(Mat_eff)) { # pour chaque variable

@@ -1,11 +1,11 @@
 AnaSettings <-
 function(tab, type.data="raw_data") {
-# tab = le tableau de donn\'ees
-# type.data = raw_data ou summarized_data
+# tab = le tableau de données
+# type_data = raw_data ou summarized_data
 
 .provenv = new.env()
 
-tt <- tktoplevel(width=600, height=420) # on cr\'ee une fenetre de taille fix\'ee 
+tt <- tktoplevel(width=600, height=420) # on crée une fenetre de taille fixée 
  tkpack.propagate(tt, FALSE) 
  tktitle(tt) <- "Analysis settings" # Le titre qui s'affichera dans la barre de fenetre 
  fontHeading <- tkfont.create(family="arial",size=12,weight="bold") # un style de fonte 
@@ -41,7 +41,7 @@ tkselection.set(maliste, 0,2)
 
 ######## FRAME PROTOCOLE
  frameAllTraits <- tkframe(frameProtocole, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
- cb1 <- tkcheckbutton(frameAllTraits) # premiere tickbox
+ cb1 <- tkcheckbutton(frameAllTraits) # première tickbox
  var_all <- tclVar("0")
  tkconfigure(cb1,variable=var_all)
 
@@ -52,35 +52,35 @@ tkselection.set(maliste, 0,2)
 
  frameMinIndiv <- tkframe(frameProtocole, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
  textEntryVarTcl <- tclVar("10")
- textEntryWidget <- tkentry(frameMinIndiv, width = 2, textvariable = textEntryVarTcl)
+ textEntryWidget <- tkentry(frameMinIndiv, width = 2, bg="white", textvariable = textEntryVarTcl)
  
  frameFTCor <- tkframe(frameProtocole, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
- cb3 <- tkcheckbutton(frameFTCor) # troisieme tickbox
+ cb3 <- tkcheckbutton(frameFTCor) # troisième tickbox
  var_ftcor <- tclVar("1")
  tkconfigure(cb3,variable=var_ftcor)
  
  frameFormula <- tkframe(frameProtocole, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
  rb1 <- tkradiobutton(frameFormula)
  rb2 <- tkradiobutton(frameFormula)
- var_formula <- tclVar("Anscombe") # le choix par d\'efaut
+ var_formula <- tclVar("Anscombe") # le choix par défaut
  tkconfigure(rb1,variable=var_formula,value="Anscombe", text="Anscombe formula ; or ")
  tkconfigure(rb2,variable=var_formula,value="FreemanTukey", text="Freeman and Tukey formula")
 
  tkpack(frameAllTraits)
  tkpack(frameAllBOTraits)
  tkpack(tklabel(frameAllTraits,text="Keep the traits with the same value for all the individuals of the dataset"), cb1, side="left")
- tkpack(tklabel(frameAllBOTraits,text="Keep the traits with the same value for all the individuals except one    "), cb2, side="left")
+ tkpack(tklabel(frameAllBOTraits,text="Keep the traits with the same value for all the individuals, except one    "), cb2, side="left")
  tkpack(frameMinIndiv)
- tkpack(tklabel(frameMinIndiv, text = "Keep only the traits with this minimal number of individuals per group  "), textEntryWidget, side="left")
+ tkpack(tklabel(frameMinIndiv, text = "Keep only the traits with this minimal number of individuals per group : "), textEntryWidget, side="left")
  tkpack(frameFTCor)
- tkpack(tklabel(frameFTCor,text="Apply Freeman-Tukey correction for small samples                               "), cb3, side="left")
+ tkpack(tklabel(frameFTCor,text="Apply Freeman-Tukey correction for small samples                                 "), cb3, side="left")
  tkpack(frameFormula)
  tkpack(tklabel(frameFormula, text="Use :"), rb1, rb2, side="left")
  
  
 ######### FRAME OUTPUTS
  frameMDSGraph <- tkframe(frameOutputs, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
- cb4 <- tkcheckbutton(frameMDSGraph) # premiere tickbox
+ cb4 <- tkcheckbutton(frameMDSGraph) # première tickbox
  var_mds <- tclVar("1")
  tkconfigure(cb4,variable=var_mds)
 

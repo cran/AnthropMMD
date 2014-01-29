@@ -1,20 +1,22 @@
 Sel_type_data <-
 function(){
-tt <- tktoplevel() # on cr\'ee une fenetre
-tkwm.geometry(tt, "367x370")
-tkwm.minsize(tt, 367, 370)
-tktitle(tt) <- "About your dataset..." # Le titre qui s'affichera dans la barre de fenetre
+tt <- tktoplevel() # on crée une fenetre
+tkwm.geometry(tt, "375x450")
+tkwm.minsize(tt, 375, 450)
+tktitle(tt) <- "[AnthropMMD] About your dataset..." # Le titre qui s'affichera dans la barre de fenetre
 fontHeading <- tkfont.create(family="arial",size=12,weight="bold")
 
 ##################################
 # Declarations et configurations :
-frameTypeData <- tkframe(tt, relief="groove", borderwidth=3) # declaration d'une frame
+frameTypeData <- tkframe(tt, relief="groove", borderwidth=3) # declaration d'une frame pour le type des donnees
+frameDelimiters <- tkframe(tt, relief="groove", borderwidth=0) # declaration d'une frame pour les delimiteurs
 
+# Frame sur le type des donnees :
 rb1 <- tkradiobutton(frameTypeData) # declaration d'un premier bouton radio
 rb2 <- tkradiobutton(frameTypeData) # declaration d'un second bouton radio
-rbValue <- tclVar("raw_data") # cette variable (initialis\'ee à Raw) contiendra au final le choix retenu par l'utilisateur via son bouton
+rbValue <- tclVar("raw_data") # cette variable (initialisée à Raw) contiendra au final le choix retenu par l'utilisateur via son bouton
 tkconfigure(rb1,variable=rbValue,value="raw_data",text="Raw (binary) dataset...") # affectation d'une variable tcltk a chaque bouton radio
-tkconfigure(rb2,variable=rbValue,value="summarized_data",text="Summarized data...")
+tkconfigure(rb2,variable=rbValue,value="summarized_data",text="Summarized (groups n's and frequencies) data...")
 
 cb1 <- tkcheckbutton(frameTypeData)
 val_header <- tclVar("1")
@@ -23,30 +25,45 @@ cb2 <- tkcheckbutton(frameTypeData)
 val_rownames <- tclVar("1")
 tkconfigure(cb2,variable=val_rownames)
 
+# Frame sur les delimiteurs :
+sepChampVarTcl <- tclVar(";")
+sepChampWidget <- tkentry(frameDelimiters, width = 1, bg="white", textvariable = sepChampVarTcl)
+textNaVarTcl <- tclVar("")
+textNaWidget <- tkentry(frameDelimiters, width = 2, bg="white", textvariable = textNaVarTcl)
+sepDecVarTcl <- tclVar(",")
+sepDecWidget <- tkentry(frameTypeData, width = 1, bg="white", textvariable = sepDecVarTcl)
+
 #################
 # Mise en forme :
 tkgrid(frameTypeData)
 tkgrid(tklabel(frameTypeData,text="Type of your dataset", font=fontHeading))
-tkgrid(tklabel(frameTypeData,text="    ")) # ligne vide pour a\'erer
+tkgrid(tklabel(frameTypeData,text="    ")) # ligne vide pour aérer
 tkgrid(rb1, sticky="w")
 tkgrid(tklabel(frameTypeData,text="... with column names"),cb1,sticky="e")
 tkgrid(tklabel(frameTypeData,text="... with row names"),cb2,sticky="e")
-tkgrid(tklabel(frameTypeData,text="    ")) # ligne vide pour a\'erer
+tkgrid(tklabel(frameTypeData,text="The first column must be a group identifier."))
+tkgrid(tklabel(frameTypeData,text="    ")) # ligne vide pour aérer
 tkgrid(rb2, sticky="w")
-tkgrid(tklabel(frameTypeData,text="      ... row and column names are mandatory here."),sticky="e")
+tkgrid(tklabel(frameTypeData,text="... with this character used for decimal points :"),sepDecWidget,sticky="e")
+tkgrid(tklabel(frameTypeData,text="Row and column names are mandatory here."))
 
-tkgrid(tklabel(tt,text="    ")) # ligne vide pour a\'erer
+tkgrid(tklabel(tt,text="    ")) # ligne vide pour aérer
 tkgrid(tklabel(tt,text="Information", font=fontHeading))
-tkgrid(tklabel(tt,text="Please make sure that your data files are \n formated in .csv with a semicolon separator (;).\n The first variable must be a group indicator."))
+tkgrid(tklabel(tt,text="Please note that only .csv and .txt files \n are accepted by the program."))
+tkgrid(tklabel(tt,text="    ")) # ligne vide pour aérer
 
-tkgrid(tklabel(tt,text="    ")) # ligne vide pour a\'erer
+tkgrid(frameDelimiters)
+tkgrid(tklabel(frameDelimiters,text="Character used as field separator :"),sepChampWidget,sticky="e")
+tkgrid(tklabel(frameDelimiters,text="String used for missing values :"),textNaWidget, sticky="e")
+
+tkgrid(tklabel(tt,text="    ")) # ligne vide pour aérer
 OK.but <- tkbutton(tt,text="OK",command=function() tkdestroy(tt), relief="groove",borderwidth=3,width=7,bg="green4",fg="white")
 tkgrid(OK.but)
 tkfocus(tt)
-tkwait.window(OK.but) # TRÈS IMPORTANT : l'ex\'ecution s'arrête ici tant que l'utilisateur n'a pas cliqu\'e sur OK 
+tkwait.window(OK.but) # TRES IMPORTANT : l'exécution s'arrête ici tant que l'utilisateur n'a pas cliqué sur OK 
 
-user_choice = list(as.character(tclvalue(rbValue)), tclvalue(val_header), tclvalue(val_rownames))
-names(user_choice) = c("Type_data", "Colnames", "Rownames")
+user_choice = list(as.character(tclvalue(rbValue)), tclvalue(val_header), tclvalue(val_rownames), tclvalue(sepChampVarTcl), tclvalue(sepDecVarTcl), tclvalue(textNaVarTcl))
+names(user_choice) = c("Type_data", "Colnames", "Rownames", "FieldSep", "DecPoint", "TextNA")
 return(user_choice)
 }
 
@@ -54,64 +71,76 @@ return(user_choice)
 StartMMD <-
 function(){
 
-myenvg = new.env() # environnement priv\'e au package ; contiendra les variables globales
+myenvg = new.env() # environnement privé au package ; contiendra les variables globales
 GoOn <- 1 # variable globale indiquant si le programme doit continuer ou se terminer
 
-## FENETRE DE CHOIX DU TYPE DES DONNEES :
-# Deux possibilit\'es : l'utilisateur a-t-il un tableau de donn\'ees binaires (brutes) ou un tableau d'effectifs et de proportions (donn\'ees r\'esum\'ees) ?
-type_data = Sel_type_data() # on r\'ecup\`ere ici le choix de l'utilisateur
+## FENÊTRE DE CHOIX DU TYPE DES DONNÉES :
+# Deux possibilités : l'utilisateur a-t-il un tableau de données binaires (brutes) ou un tableau d'effectifs et de proportions (données résumées) ?
+type_data = Sel_type_data() # on récupère ici le choix de l'utilisateur
 
 
 ## FENÊTRE DE CHARGEMENT DES DONNÉES :
-# Faire charger les donn\'ees
-fileName <- tclvalue(tkgetOpenFile(filetypes="{{CSV Files} {.csv}}"))
+# Faire charger les données
+fileName <- tclvalue(tkgetOpenFile(filetypes="{{CSV files} {.csv}} {{Text files} {.txt}}"))
 if (!nchar(fileName)) {
  tkmessageBox(message = "No file was selected!")
  GoOn <- 0  
 }
 
 
-## CHARGEMENT EFFECTIF DES DONNEES :
-if ((GoOn == 1) & (type_data$Type_data=="raw_data")) { # si le programme peut continuer normalement et que l'utilisateur a charg\'e des donn\'ees brutes
- bdd = read.csv(file=fileName, header=(type_data$Colnames=="1"), sep=";") # dans un premier temps on ne met pas row.names=1, pour v\'erifier que les noms   d'individus ne comportent pas de doublons
+## CHARGEMENT EFFECTIF DES DONNÉES :
+if ((GoOn == 1) & (type_data$Type_data=="raw_data")) { # si le programme peut continuer normalement et que l'utilisateur a chargé des données brutes
+ bdd = read.table(file=fileName, header=(type_data$Colnames=="1"), sep=type_data$FieldSep, dec=type_data$DecPoint, na.strings=type_data$TextNA) # dans un premier temps on ne met pas row.names=1, pour vérifier que les noms d'individus ne comportent pas de doublons
  if (anyDuplicated(bdd[,1])>0 & (type_data$Rownames=="1")) {
-  tkmessageBox(title="Duplicated names", message = "Warning : there are duplicates in the names of your individuals. The program will continue normally anyway, but please check your data.", icon = "warning", type = "ok") # on pr\'evient l'utilisateur si son fichier a des doublons
+  tkmessageBox(title="[AnthropMMD] Duplicated row names", message = "Warning : there are duplicates in the names of your individuals. The program will continue normally anyway, but please check your data.", icon = "warning", type = "ok") # on prévient l'utilisateur si son fichier a des doublons
  }
- if (type_data$Colnames=="1") {bdd = bdd[,-1]} # on retire la premi\`ere colonne (i.e. les noms d'individus) le cas echeant
+ if (type_data$Colnames=="1") {bdd = bdd[,-1]} # on retire la première colonne (i.e. les noms d'individus) le cas echeant
 
-} else if ((GoOn == 1) & (type_data$Type_data=="summarized_data")) { # si le programme peut continuer normalement et que l'utilisateur a charg\'e un r\'esum\'e
+} else if ((GoOn == 1) & (type_data$Type_data=="summarized_data")) { # si le programme peut continuer normalement et que l'utilisateur a chargé un résumé
  bdd = read.csv(file=fileName, header=TRUE, row.names=1, dec=",", sep=";")
 }
 
-
-## FENETRE DE PARAMETRAGE DE L'ANALYSE :
-if (GoOn == 1) {
- UserSettings <- AnaSettings(bdd, type_data$Type_data)
+## CONTROLE DU TYPE DES DONNEES :
+if ((GoOn == 1) & (type_data$Type_data=="raw_data")) { # si le programme peut continuer normalement et que l'utilisateur a chargé des données brutes
+ for (j in 2:ncol(bdd)) {
+  if (nlevels(factor(bdd[,j]))>2) {
+   tkmessageBox(title="[AnthropMMD] Invalid dataset", message = "Error : invalid dataset (at least one variable is not dichotomous).", icon = "error", type = "ok") # on prévient l'utilisateur si son fichier a des doublons
+   GoOn <- 0
+   break
+  }
+ }
 }
 
-if (length(UserSettings$Groupes_retenus)<2) { # si l'utilisateur a retenu moins de 2 groupes, le programme s'arrete
- tkmessageBox(title="Error", message = "You must select at least two groups.", icon = "error", type = "ok")
+## FENÊTRE DE PARAMÉTRAGE DE L'ANALYSE :
+if (GoOn == 1) {
+ UserSettings <- AnaSettings(bdd, type.data=type_data$Type_data)
+}
+
+if (GoOn == 1) {
+if (length(UserSettings$Groupes_retenus)<2) { # si l'utilisateur a retenu moins de 2 groupes, le programme s'arrête
+ tkmessageBox(title="[AnthropMMD] Error", message = "You must select at least two groups.", icon = "error", type = "ok")
  GoOn <- 0 
 } else if (type_data$Type_data=="raw_data") { # cas d'une base brute 0/1
  groups_to_keep = levels(factor(bdd[,1]))[UserSettings$Groupes_retenus]
- bdd = bdd[bdd[,1] %in% groups_to_keep, ] # la bdd est restreinte aux groupes s\'electionn\'es par l'utilisateur
+ bdd = bdd[bdd[,1] %in% groups_to_keep, ] # la bdd est restreinte aux groupes sélectionnés par l'utilisateur
  bdd[,1] = factor(bdd[,1])
-} else if (type_data$Type_data=="summarized_data") { # cas d'une base r\'esum\'ee
+} else if (type_data$Type_data=="summarized_data") { # cas d'une base résumée
  bdd = bdd[c(UserSettings$Groupes_retenus, UserSettings$Groupes_retenus+nrow(bdd)/2) ,]
 }
+}
 
-
-## ON LANCE DONC DESORMAIS LE CALCUL DU MMD :
+## ON LANCE DONC DÉSORMAIS LE CALCUL DU MMD :
 if (GoOn == 1) {
  prep = Prepa_MMD(bdd, type=type_data$Type_data, k=UserSettings$Nb_min_indiv, all_vars=UserSettings$All_vars, idiosync=UserSettings$All_BO_vars)
 }
 
-if (!is.vector(prep)) {
+if ((!is.vector(prep)) & (GoOn==1)) {
+ cat("\n", "Group n's and group frequencies for the traits retained in this analysis:", "\n")
  print(prep)
  resul = Mat_MMD(Mat_eff=prep[1:(nrow(prep)/2), ], Mat_prop=prep[(nrow(prep)/2 + 1):nrow(prep), ], formule=UserSettings$Formula, corrFT=UserSettings$FTcor)
 } else {
  GoOn <- 0
- tkmessageBox(title="Invalid selection", message = "Error : no variable meets your selection criteria in the dataset. The program will stop : please try again with more flexible criteria.", icon = "error", type = "ok") # on pr\'evient l'utilisateur si ses criteres de selection sont trop severes
+ tkmessageBox(title="[AnthropMMD] Invalid selection", message = "Error : no variable meets your selection criteria in the dataset. The program will stop : please try again with more flexible criteria.", icon = "error", type = "ok") # on prévient l'utilisateur si ses criteres de selection sont trop severes
 }
 
 # if (GoOn == 1) {
@@ -144,15 +173,17 @@ if (ncol(resul$MMDMatrix)>2) {
  plot(x=mds[,1], y=mds[,2], xlab="MDS_Axis_1", ylab="MDS_Axis_2", asp=1, axes=FALSE, pch=16, main="MDS performed on MMDs")
  text(x=mds[,1], y=mds[,2], rownames(mds), pos=2)
 } else {
- tkmessageBox(title="MDS", message = "Warning : MDS plot will not be displayed (more than two groups are necessary)", icon = "error", type = "ok") # on pr\'evient l'utilisateur si ses criteres de selection sont trop severes
+ tkmessageBox(title="[AnthropMMD] MDS", message = "Warning : MDS plot will not be displayed (more than two groups are necessary)", icon = "error", type = "ok") 
 }
 }
 
 # ET ON PROPOSE A L'UTILISATEUR DE SAUVEGARDER SA MATRICE DE MMD :
 if (GoOn == 1) {
- cat("\n", "Significant MMD are indicated by stars :", signif)
+ cat("\n", "Significant MMD are indicated by stars:", "\n")
+ print(signif)
  if(UserSettings$IDP) {
-  cat("\n", "Individual Measures of Divergence for each variable :", resul$IndividualMD)
+  cat("\n", "Individual Measures of Divergence for each variable:", "\n")
+  print(t(resul$IndividualMD))
   write.csv2(resul$IndividualMD, "Results_AnthropMMD_IndividualMD.csv")
  }
  write.csv2(resul$MMDMatrix, "Results_AnthropMMD_MmdValuesUp_SdDown.csv") # matrice MMD en haut et var en bas
