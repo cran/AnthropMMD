@@ -37,7 +37,7 @@ if (type.data=="raw_data") {
  groupes <- rownames(tab)[1:(nrow(tab)/2)]
  for (i in (1:length(groupes))) { tkinsert(maliste, "end", groupes[i]) } 
 }
-tkselection.set(maliste, 0,2)
+tkselection.set(maliste, 0, nlevels(factor(tab[,1]))-1)
 
 ######## FRAME PROTOCOLE
  frameAllTraits <- tkframe(frameProtocole, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 

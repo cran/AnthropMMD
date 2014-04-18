@@ -12,8 +12,8 @@ Offers a complete and interactive GUI to work out a matrix of Mean Measures of D
 \tabular{ll}{
 Package: \tab AnthropMMD\cr
 Type: \tab Package\cr
-Version: \tab 0.9.8\cr
-Date: \tab 2014-01-29\cr
+Version: \tab 0.9.9\cr
+Date: \tab 2014-04-18\cr
 License: \tab GPL (>= 2)\cr
 }
 
@@ -28,7 +28,7 @@ Sjovold, T. (1977). Non-metrical Divergence Between Skeletal Populations. Ossa, 
 
 Harris, E. F., Sjovold, T. (2004). Calculation of Smith's Mean Measure of Divergence for Intergroup Comparisons Using Nonmetric Data. Dental Anthropology, 17(3), 83-93.
 }
-\keyword{MMD}
+\keyword{ MMD }
 
 \examples{
 \dontrun{StartMMD() # the only command to know : simply type it to begin !}

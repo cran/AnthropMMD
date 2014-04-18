@@ -28,6 +28,7 @@ The user can specify the desired outputs using the graphical user interface, but
 - the file Results_AnthropMMD_MmdValuesSym.csv is a symmetrical matrix containing the MMD values between each pair of groups.
 
 - the file Results_AnthropMMD_SignifMmd.csv is a matrix where significant MMD values are indicating by stars (*), significance being determined at the 0.05 level. 
+
 }
 \references{
 Sjovold, T. (1977). Non-metrical Divergence Between Skeletal Populations. Ossa, 4, Supp. 1.
