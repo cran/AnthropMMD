@@ -57,7 +57,7 @@ tkgrid(tklabel(frameDelimiters,text="Character used as field separator :"),sepCh
 tkgrid(tklabel(frameDelimiters,text="String used for missing values :"),textNaWidget, sticky="e")
 
 tkgrid(tklabel(tt,text="    ")) # ligne vide pour a\'erer
-#### MODIFIE légèrement à partir d'ici
+#### MODIFIE l\'eg\`erement \`a partir d'ici
 OnOK<-function()
 {
 user_choice = list(as.character(tclvalue(rbValue)), tclvalue(val_header), tclvalue(val_rownames), tclvalue(sepChampVarTcl), tclvalue(sepDecVarTcl), tclvalue(textNaVarTcl))
@@ -69,12 +69,12 @@ OK.but <- tkbutton(tt,text="OK",command=OnOK , relief="groove",borderwidth=3,wid
 tkgrid(OK.but)
 tkfocus(tt)
 #tkwait.window(OK.but) # TRES IMPORTANT : l'ex\'ecution s'arr\^ete ici tant que l'utilisateur n'a pas cliqu\'e sur OK 
-tkwait.window(tt)  # MODIFIE légèrement
+tkwait.window(tt)  # MODIFIE l\'eg\`erement
 }
 
 
 Gabarit_MMD <-
-function(type_data){   #MODIFIE : la fonction a un paramètre, envoyé par Sel_type_data
+function(type_data){   #MODIFIE : la fonction a un param\`etre, envoy\'e par Sel_type_data
 
 myenvg = new.env() # environnement priv\'e au package ; contiendra les variables globales
 GoOn <- 1 # variable globale indiquant si le programme doit continuer ou se terminer
@@ -141,6 +141,7 @@ if (GoOn == 1) {
 if ((!is.vector(prep)) & (GoOn==1)) {
  cat("\n", "Group n's and group frequencies for the traits retained in this analysis:", "\n")
  print(prep)
+ write.csv2(prep, "Results_AnthropMMD_descriptive_statistics.csv")
  resul = Mat_MMD(Mat_eff=prep[1:(nrow(prep)/2), ], Mat_prop=prep[(nrow(prep)/2 + 1):nrow(prep), ], formule=UserSettings$Formula, corrFT=UserSettings$FTcor)
 } else {
  GoOn <- 0
@@ -172,12 +173,18 @@ for (i in 1:nrow(signif)) {
 }
 
 # ET ON AFFICHE LE MDS :
-if (ncol(resul$MMDMatrix)>2) {
- mds = cmdscale(mmdvalues, k=2)
- plot(x=mds[,1], y=mds[,2], xlab="MDS_Axis_1", ylab="MDS_Axis_2", asp=1, axes=FALSE, pch=16, main="MDS performed on MMDs")
- text(x=mds[,1], y=mds[,2], rownames(mds), pos=2)
-} else {
- tkmessageBox(title="[AnthropMMD] MDS", message = "Warning : MDS plot will not be displayed (more than two groups are necessary)", icon = "error", type = "ok") 
+if (UserSettings$MDS) { # si le MDS est demand\'e par l'utilisateur
+ if (ncol(resul$MMDMatrix)>2) { # s'il y a plus de 2 groupes
+  mds = cmdscale(mmdvalues)
+  if (ncol(mds)>=2) {
+   plot(x=mds[,1], y=mds[,2], xlab="MDS_Axis_1", ylab="MDS_Axis_2", asp=1, axes=FALSE, pch=16, main="MDS performed on MMDs")
+   text(x=mds[,1], y=mds[,2], rownames(mds), pos=2)
+  } else { # si le mds ne parvient pas a etre calcul\'e en deux dim
+   tkmessageBox(title="[AnthropMMD] MDS", message = "Warning : MDS plot will not be displayed (only one non-zero eigenvalue)", icon = "error", type = "ok")
+  }
+ } else {
+  tkmessageBox(title="[AnthropMMD] MDS", message = "Warning : MDS plot will not be displayed (more than two groups are necessary)", icon = "error", type = "ok") 
+ }
 }
 }
 

@@ -12,8 +12,8 @@ Offers a complete and interactive GUI to work out a matrix of Mean Measures of D
 \tabular{ll}{
 Package: \tab AnthropMMD\cr
 Type: \tab Package\cr
-Version: \tab 0.9.9\cr
-Date: \tab 2014-04-18\cr
+Version: \tab 1.0.1\cr
+Date: \tab 2016-04-07\cr
 License: \tab GPL (>= 2)\cr
 }
 

@@ -40,8 +40,8 @@ return(sel)
 
 Prepa_MMD <-
 function(tab, type="raw_data", k=10, all_vars=FALSE, idiosync=FALSE) {
- # il s'agit d'une fonction préparant un tableau de résumé pour l'analyse par MMD d'un tableau binaire "tab" dont la premiere colonne est un indicateur de groupes.
- # type : sont-ce des données brutes ou résumées ?
+ # il s'agit d'une fonction pr\'eparant un tableau de r\'esum\'e pour l'analyse par MMD d'un tableau binaire "tab" dont la premiere colonne est un indicateur de groupes.
+ # type : sont-ce des donn\'ees brutes ou r\'esum\'ees ?
  # Signification de k : nombre minimal d'individus par groupes pour que le caract\`ere soit retenu dans le calcul du MMD.
  # all_vars : bool\'een indiquant si meme les variables avec que des 0 (ou que des 1) doivent etre retenues.
  # idiosync : bool\'een indiquant si meme les variables avec que des 0 (ou que des 1) *sauf sur un individu* doivent etre retenues.
@@ -54,9 +54,9 @@ if (type == "raw_data") { ## POUR UN TABLEAU DE DONNEES BRUTES :
  
  # On garde en m\'emoire le nombre de groupes presents :
  nb_grp = nlevels(tab[,1])
- # Et on transforme une première fois les données brutes en données résumées :
+ # Et on transforme une premi\`ere fois les donn\'ees brutes en donn\'ees r\'esum\'ees :
  tac = selvar(tab)
-} else if (type == "summarized_data") { # POUR UN TABLEAU DE DONNÉES RÉSUMÉES : 
+} else if (type == "summarized_data") { # POUR UN TABLEAU DE DONN\'eES R\'eSUM\'eES : 
  nb_grp = nrow(tab)/2
  tac = tab
 }
@@ -75,7 +75,7 @@ if (type == "raw_data") { ## POUR UN TABLEAU DE DONNEES BRUTES :
 
 if (sum(sel)>1) { # s'il y a au moins 2 colonnes selectionnees, on continue
 
- # On ne retient donc que les colonnes bien renseignees, et la premiere qui est l'indicateur de groupes dans le cas de données brutes :
+ # On ne retient donc que les colonnes bien renseignees, et la premiere qui est l'indicateur de groupes dans le cas de donn\'ees brutes :
  if (type == "raw_data") { 
   tab = tab[ , c(TRUE, sel)]
   tac = selvar(tab)

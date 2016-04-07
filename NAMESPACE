@@ -1,2 +1,6 @@
 export("StartMMD")
+import(tcltk)
 import(tcltk2)
+importFrom("graphics", "plot", "text")
+importFrom("stats", "cmdscale")
+importFrom("utils", "read.csv", "read.table", "write.csv2")

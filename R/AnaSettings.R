@@ -1,11 +1,11 @@
 AnaSettings <-
 function(tab, type.data="raw_data") {
-# tab = le tableau de données
+# tab = le tableau de donn\'ees
 # type_data = raw_data ou summarized_data
 
 .provenv = new.env()
 
-tt <- tktoplevel(width=600, height=420) # on crée une fenetre de taille fixée 
+tt <- tktoplevel(width=600, height=420) # on cr\'ee une fenetre de taille fix\'ee 
  tkpack.propagate(tt, FALSE) 
  tktitle(tt) <- "Analysis settings" # Le titre qui s'affichera dans la barre de fenetre 
  fontHeading <- tkfont.create(family="arial",size=12,weight="bold") # un style de fonte 
@@ -41,7 +41,7 @@ tkselection.set(maliste, 0, nlevels(factor(tab[,1]))-1)
 
 ######## FRAME PROTOCOLE
  frameAllTraits <- tkframe(frameProtocole, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
- cb1 <- tkcheckbutton(frameAllTraits) # première tickbox
+ cb1 <- tkcheckbutton(frameAllTraits) # premi\`ere tickbox
  var_all <- tclVar("0")
  tkconfigure(cb1,variable=var_all)
 
@@ -55,14 +55,14 @@ tkselection.set(maliste, 0, nlevels(factor(tab[,1]))-1)
  textEntryWidget <- tkentry(frameMinIndiv, width = 2, bg="white", textvariable = textEntryVarTcl)
  
  frameFTCor <- tkframe(frameProtocole, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
- cb3 <- tkcheckbutton(frameFTCor) # troisième tickbox
+ cb3 <- tkcheckbutton(frameFTCor) # troisi\`eme tickbox
  var_ftcor <- tclVar("1")
  tkconfigure(cb3,variable=var_ftcor)
  
  frameFormula <- tkframe(frameProtocole, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
  rb1 <- tkradiobutton(frameFormula)
  rb2 <- tkradiobutton(frameFormula)
- var_formula <- tclVar("Anscombe") # le choix par défaut
+ var_formula <- tclVar("Anscombe") # le choix par d\'efaut
  tkconfigure(rb1,variable=var_formula,value="Anscombe", text="Anscombe formula ; or ")
  tkconfigure(rb2,variable=var_formula,value="FreemanTukey", text="Freeman and Tukey formula")
 
@@ -80,7 +80,7 @@ tkselection.set(maliste, 0, nlevels(factor(tab[,1]))-1)
  
 ######### FRAME OUTPUTS
  frameMDSGraph <- tkframe(frameOutputs, relief="flat", borderwidth=1, width=540, height=50) # declaration d'une frame 
- cb4 <- tkcheckbutton(frameMDSGraph) # première tickbox
+ cb4 <- tkcheckbutton(frameMDSGraph) # premi\`ere tickbox
  var_mds <- tclVar("1")
  tkconfigure(cb4,variable=var_mds)
 
