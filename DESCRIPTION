@@ -1,14 +1,14 @@
 Package: AnthropMMD
 Type: Package
-Title: A GUI for Mean Measures of Divergence
-Version: 1.0.1
-Date: 2016-04-07
+Title: A GUI for Smith's Mean Measure of Divergence
+Version: 2.1.0
+Date: 2017-08-09
 Author: Frederic Santos
 Maintainer: Frederic Santos <frederic.santos@u-bordeaux.fr>
-Depends: R (>= 3.0.1), tcltk, tcltk2
-Description: Offers a complete and interactive GUI to work out Mean Measures of Divergence, especially for anthropologists.
+Depends: R (>= 3.4.1), shiny
+Description: Offers a Shiny user interface to work out Smith's Mean Measure of Divergence.
 License: GPL (>= 2)
 NeedsCompilation: no
-Packaged: 2016-04-07 12:24:30 UTC; fsantos
+Packaged: 2017-08-09 10:12:23 UTC; fsantos
 Repository: CRAN
-Date/Publication: 2016-04-07 16:00:50
+Date/Publication: 2017-08-09 10:19:16 UTC
