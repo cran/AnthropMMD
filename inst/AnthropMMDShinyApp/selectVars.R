@@ -52,9 +52,14 @@ selectVars <- function(tab, k=10, excludeTraits, groups, formule) {
 		tab <- tab[ , avirer]
 		tabDisplay <- IMDs$Sorted[rownames(IMDs$Sorted) %in% colnames(tab), ]
 	} 
-	  else if (excludeTraits=="excludeNCT") { # on elimine tous les traits avec une contribution neagtive a la MMD
+	  else if (excludeTraits=="excludeNOMD") { # on elimine tous les traits avec une contribution neagtive a la MMD
 		tab <- tab[ , rownames(IMDs$Pos)]
 		tabDisplay <- IMDs$SortedPos
+	} 
+	  else if (excludeTraits=="keepFisher") { # on elimine tous les traits ne montrant aucune difference significative au test exact de Fisher
+	  	tab <- fisherTestTab(tab)
+	  	tabDisplay <- IMDs$Sorted[rownames(IMDs$Sorted) %in% colnames(tab), ]
+	  
 	} else { # il n'y avait aucune strategie particuliere d'exclusion de variables
 		tabDisplay <- IMDs$Sorted
 	}

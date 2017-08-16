@@ -50,9 +50,10 @@ calcMMD <- function(dat, formule) {
 	MMDSignif <- round(MMDMatrix,3) # matrice qui contiendra l'info sur la significativite des MMD
 	for (i in 1:nrow(MMDMatrix)) {
  		for (j in 1:ncol(MMDMatrix)) { # pour chaque paire de variables...
-  			if (i > j) {MMDSym[i,j] <- MMDMatrix[j,i] ; MMDSignif[i,j] <- ifelse(MMDMatrix[j,i]>(2*MMDMatrix[i,j]), "*", "NS")}
+  			if (i > j) {MMDSym[i,j] <- max(0,MMDMatrix[j,i]) ; MMDSignif[i,j] <- ifelse(MMDMatrix[j,i]>(2*MMDMatrix[i,j]), "*", "NS")}
   			#else if(i < j) {MMDSignif[i,j] <- MMDMatrix[,j]}
   			else if (i==j) {MMDSignif[i,j] <- NA}
+  			else {MMDSym[i,j] <- max(0,MMDSym[i,j])} # on remplace (ici et ci-dessus) les valeurs negatives de MMD par des 0.
  		}
 	}
 

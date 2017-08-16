@@ -1,8 +1,12 @@
 shinyUI(fluidPage(theme="kappa.css",
 	
 	titlePanel("AnthropMMD — A GUI for Smith's Mean Measure of Divergence"),
-	tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #0098B6}")), # pour régler la couleur de la barre du slider
-
+	#tags$style(HTML(".js-irs-0 .irs-single, .js-irs-0 .irs-bar-edge, .js-irs-0 .irs-bar {background: #0098B6}")), # pour régler la couleur de la barre du slider
+	tags$style(type = "text/css", "
+		.irs-bar {width: 100%; background: #0098B6;}
+		.irs-bar-edge {background: #0098B6;}
+		.irs-single {color:white; background:#0098B6; font-weight: bold;}
+ 	"),
 	sidebarLayout(
 		#############################################################
 		# I] Le menu de gauche, presentant les options de l'analyse :
@@ -47,14 +51,11 @@ shinyUI(fluidPage(theme="kappa.css",
 			
 			h4("Trait selection"),
 			fluidRow(
-				column(5,
-					sliderInput("minNbInd", label="Only retain the traits with this minimal number of individuals per group", value=10, min=1, max=100) # fourchette autorisee large, sera reduite dans server.R apres chargement du fichier
+				column(6,
+					radioButtons("exclusionStrategy", label="Exclusion strategy", choices=list("None"="none", "Exclude nonpolymorphic traits"="excludeNPT", "Exclude quasi-nonpolymorphic traits"="excludeQNPT", "Use Fisher's exact test (may be slow)"="keepFisher", "Exclude traits with negative overall MD"="excludeNOMD"))
 				),
-				column(7,
-					radioButtons("exclusionStrategy", label="Exclusion strategy", choices=list("None"="none", "Exclude nonpolymorphic traits"="excludeNPT", "Exclude quasi-nonpolymorphic traits"="excludeQNPT", "Exclude traits with negative overall MD"="excludeNCT"))
-					#checkboxInput("excludeNPT", label="Exclude nonpolymorphic traits", value=TRUE),
-					#checkboxInput("excludeQNPT", label="Exclude quasi-nonpolymorphic traits", value=TRUE),
-					#checkboxInput("excludeNCT", label="Exclude traits with negative contribution to MMD", value=FALSE)
+				column(6,
+					uiOutput("regletteNbMinInd")
 				)
 			)
 		),
@@ -79,7 +80,7 @@ shinyUI(fluidPage(theme="kappa.css",
 							br(),
     							strong(textOutput("text_table_MMDSym")), # cet element est calcul\'e dans server.R seulemt apr\`es l'importation du fichier
     							br(),
-    							tableOutput("tableMMDSym"),
+    							div(style="overflow:auto; width:100%;", tableOutput("tableMMDSym")),
     							uiOutput("button_download_tableMMDSym"),
     							br(),
     							br(),
@@ -92,13 +93,13 @@ shinyUI(fluidPage(theme="kappa.css",
 							br(),
 							strong(textOutput("text_table_MMD")), # cet element est calcul\'e dans server.R seulemt apr\`es l'importation du fichier
 							br(),
-							tableOutput("tableMMD"),
+							div(style="overflow:auto; width:100%;", tableOutput("tableMMD")),
 							uiOutput("button_download_tableMMD"),
 							br(),
 							br(),
 							strong(textOutput("text_table_MMDSignif")), # cet element est calcul\'e dans server.R seulemt apr\`es l'importation du fichier
 							br(),
-							tableOutput("tableMMDSignif"),
+							div(style="overflow:auto; width:100%;", tableOutput("tableMMDSignif")),
 							uiOutput("button_download_tableMMDSignif")
 								
     						)
