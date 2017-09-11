@@ -14,10 +14,10 @@ calcMMD <- function(dat, formule) {
 	}
 
 	# FORMULE SERVANT POUR LE CALCUL DE L'ECART-TYPE DES MMD :
-	sdform <- function(nA,nB) { (1/(nA+0.5) + 1/(nB+0.5))^2 }
+	sdFormula <- function(nA,nB) { (1/(nA+0.5) + 1/(nB+0.5))^2 }
 
 	# APPLIQUER LA CORRECTION DE FT :
-	thetadiff <- function(nA,pA,nB,pB) { (theta(nA,pA) - theta(nB,pB))^2 - (1/(nA+0.5) + 1/(nB+0.5)) }
+	thetaDiff <- function(nA,pA,nB,pB) { (theta(nA,pA) - theta(nB,pB))^2 - (1/(nA+0.5) + 1/(nB+0.5)) }
 	
 	# CONSTRUCTION DE LA MATRICE DE MMD :
 	MMDMatrix <- matrix(0, nrow=nrow(Mat_eff), ncol=nrow(Mat_eff)) # MMDMatrix a autant de lignes et de colonnes qu'on a de groupes dans les donnees
@@ -30,14 +30,14 @@ calcMMD <- function(dat, formule) {
   			MMDVect <- vector("numeric", length(Mat_eff[1,])) 
   			if (j > i) { # on est au-dessus de la diagonale du tableau : on remplit avec les valeurs MMD
    				for (k in 1:length(MMDVect)) { 
-    				MMDVect[k] <- thetadiff(Mat_eff[i,k], Mat_prop[i,k], Mat_eff[j,k], Mat_prop[j,k]) 
+    				MMDVect[k] <- thetaDiff(Mat_eff[i,k], Mat_prop[i,k], Mat_eff[j,k], Mat_prop[j,k]) 
    				}
    				MMDMatrix[i, j] <- sum(MMDVect) / length(MMDVect) 
  			} else if (i ==j) { # on est sur la diagonale du tableau
    				MMDMatrix[i, j] <- 0 # on affecte donc une valeur nulle
   			} else { # donc i > j, on est sous la diagonale et on affecte l'\'ecart-type du MMD
    				for (k in 1:length(MMDVect)) { 
-    				MMDVect[k] <- sdform(Mat_eff[i,k], Mat_eff[j,k]) 
+    				MMDVect[k] <- sdFormula(Mat_eff[i,k], Mat_eff[j,k]) 
    				}
    				MMDMatrix[i, j] <- sqrt(2*sum(MMDVect)) / length(MMDVect)
   			}

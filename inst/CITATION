@@ -1,0 +1,9 @@
+year <- sub("-.*", "", meta$Date)
+note <- sprintf("R package version %s", meta$Version)
+
+bibentry(bibtype = "Manual",
+         title = "{AnthropMMD}: A Shiny GUI for Smith's Mean Measure of Divergence (MMD)",
+         author = c(person("Fr\'ed\'eric", "Santos")),
+         year = year,
+         note = note,
+         url = "https://CRAN.R-project.org/package=AnthropMMD")

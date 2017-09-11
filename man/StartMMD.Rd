@@ -1,10 +1,10 @@
 \name{StartMMD}
 \alias{StartMMD}
 \title{
-The only function to use
+An RShiny app for the MMD
 }
 \description{
-Launches a Shiny Graphical User Interface for Mean Measure of Divergence.
+Launches a Shiny Graphical User Interface for the calculation of the Mean Measure of Divergence.
 }
 \usage{
 StartMMD()
@@ -36,7 +36,7 @@ For both data types, column names are strongly recommended for better interpreta
 \item \sQuote{Use Fisher's exact test} implements the advice given by Harris and Sjovold (2004) to select contributory traits, defined as those \dQuote{showing a statistically significant difference between at least one pair of the groups being evaluated}. Fisher's exact tests are performed for each pair of groups, and the traits showing no intergroup difference at all are excluded. Note that if you have a large number of groups (say, 10 groups), a trait with strictly equal frequencies for the last 8 groups may be considered as useful according to this criterion if there is a significant difference for the first two groups. This criterion will select all traits that can be useful for a given pair of groups, even if they are nondiscriminatory for all the other ones.
 \item \sQuote{Exclude traits with negative overall MD} is a simple way of removing the traits with quite similar frequencies across groups (the 'overall MD' is defined as the sum of the variable's measures of divergence over all pairs of groups). This criterion tends to select the traits whose frequency differs substantially across most or all groups.
 }
-These four options are designed to avoid negative MMD values, which have have no biological meaning.
+These four options are designed to avoid negative MMD values, which have no biological meaning.
 \item Some groups/populations can be manually excluded from the analysis. This may be useful if very few individuals belonging to a given population could be recorded for the variables retained by the criteria described above.
 
 \item A MDS plot and a hierarchical clustering, done using MMD dissimilarities as an input, are given in the last two tabs. As MMD can sometimes be negative, those negatives values are replaced by zeros, so that the MMD matrix can really be seen as a symmetrical distance matrix. Please note that the MDS cannot be displayed if there is only one postive eigenvalue.

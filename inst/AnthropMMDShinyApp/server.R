@@ -217,7 +217,7 @@ shinyServer(function(input, output, session) {
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>2) { # si un jeu de donnees valide a bien ete fourni et qu'on a au moins 3 groupes !
 						if (any(resultatsMMD()$MMDSym>0)) {
 							distances <- as.dist(resultatsMMD()$MMDSym) 
-							plot(hclust(distances, method="ward.D2"), main="Hierarchical clustering", xlab="")
+							plot(hclust(distances, method=input$methodCAH), main="Hierarchical clustering", xlab="")
 						} else { 
 							plot(x=0, y=0, xlab="", ylab="", axes=FALSE, xlim=c(-2,2), ylim=c(-2,2), pch="")
 							text(x=0, y=0.5, labels="The MMD matrix contains only zeros.", col="black")					
@@ -243,7 +243,7 @@ shinyServer(function(input, output, session) {
 					distances <- as.dist(resultatsMMD()$MMDSym) 
 					png(file, width=900, height=900)
 						par(cex=1.15)
-						plot(hclust(distances, method="ward.D2"), main="Hierarchical clustering", xlab="")
+						plot(hclust(distances, method=input$methodCAH), main="Hierarchical clustering", xlab="")
 					dev.off()
 	})	
 })

@@ -107,14 +107,17 @@ shinyUI(fluidPage(theme="kappa.css",
 				), 
 				# 3. L'onglet d'affichage de l'eventuel graphique MDS :
 				tabPanel("MDS plot", 
-					helpText("A multidimensional scaling plot (MDS) is displayed below if and only if there is at least three active groups."),
+					helpText("A multidimensional scaling plot (MDS) is displayed below if and only if there are at least three active groups."),
 					plotOutput("plotMDS", width="80%"),
 					br(),
 					uiOutput("button_download_plotMDS") # le bouton de telechargement des resultats n'est calcul\'e / affich\'e qu'au bout du processus (cf. server.R)
 				),
 				# 4. L'onglet d'affichage de l'eventuel graphique CAH :
 				tabPanel("Hierarchical clustering", 
-					helpText("A hierarchical clustering using Ward's method is displayed below if and only if there is at least three active groups."),
+					helpText("A hierarchical clustering using Ward's method is displayed below if and only if there are at least three active groups."),
+					br(),
+					selectInput("methodCAH", label="Agglomeration method", choices=list("Ward's method (squared distances)"="ward.D2", "Single linkage"="single", "Complete linkage"="complete", "Average linkage (UPGMA)"="average"), selected="ward.D2", multiple=FALSE),
+					br(),
 					plotOutput("plotCAH", width="80%"),
 					br(),
 					uiOutput("button_download_plotCAH") # le bouton de telechargement des resultats n'est calcul\'e / affich\'e qu'au bout du processus (cf. server.R)
