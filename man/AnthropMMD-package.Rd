@@ -6,14 +6,14 @@
 A Shiny user interface for Smith's Mean Measure of Divergence (MMD)
 }
 \description{
-Offers a Shiny user interface for the calculation of the Mean Measure of Divergence, with facilities for trait selection and graphical representations.
+Offers a Shiny user interface for the calculation of the mean measure of divergence, with facilities for trait selection and graphical representations.
 }
 \details{
 \tabular{ll}{
 Package: \tab AnthropMMD\cr
 Type: \tab Package\cr
-Version: \tab 2.2.1\cr
-Date: \tab 2017-09-11\cr
+Version: \tab 2.2.2\cr
+Date: \tab 2017-10-02\cr
 License: \tab GPL >=2\cr
 }
 
@@ -22,15 +22,15 @@ License: \tab GPL >=2\cr
 Frederic Santos, <frederic.santos@u-bordeaux.fr>
 }
 \references{
-Sjovold, T. (1977). Non-metrical Divergence Between Skeletal Populations. Ossa, \bold{4}, Supp. 1.
+Harris, E. F. and Sjovold, T. (2004). Calculation of Smith's mean measure of divergence for intergroup comparisons using nonmetric data. Dental Anthropology, \bold{17}(3), 83--93.
 
-Harris, E. F. and Sjovold, T. (2004). Calculation of Smith's Mean Measure of Divergence for Intergroup Comparisons Using Nonmetric Data. Dental Anthropology, \bold{17}(3), 83--93.
+Irish, J. (2010). The mean measure of divergence: Its utility in model-free and model-bound analyses relative to the Mahalanobis D2 distance for nonmetric traits. American Journal of Human Biology, \bold{22}, 378--395. DOI: 10.1002/ajhb.21010
 
-Irish, J. (2010). The Mean Measure of Divergence: Its Utility in Model-Free and Model-Bound Analyses Relative to the Mahalanobis D2 Distance for Nonmetric Traits. American Journal of Human Biology, \bold{22}, 378--395.
+Nikita, E. (2015). A critical review of the mean measure of divergence and Mahalanobis distances using artificial data and new approaches to the estimation of biodistances employing nonmetric traits. American Journal of Physical Anthropology, \bold{157}, 284--294. DOI: 10.1002/ajpa.22708
 
-Nikita, E. (2015). A Critical Review of the Mean Measure of Divergence and Mahalanobis Distances Using Artificial Data and New Approaches to the Estimation of Biodistances Employing Nonmetric Traits. American Journal of Physical Anthropology, \bold{157}, 284--294.
+Santos, F. (in press). AnthropMMD: an R package with a graphical user interface for the mean measure of divergence. American Journal of Physical Anthropology. DOI: 10.1002/ajpa.23336
 }
-\keyword{MMD, Mean Measure of Divergence, Smith, nonmetric traits}
+\keyword{MMD, mean measure of divergence, nonmetric traits}
 \examples{
 \dontrun{ StartMMD() }
 }

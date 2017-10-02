@@ -1,4 +1,4 @@
-96f451a2f5be100829aac92aeaac21e3 *DESCRIPTION
+d20171a22d58f9861d581db57c814dc6 *DESCRIPTION
 4874303ec033af9f1f748535a8f2f535 *NAMESPACE
 cf78137ae0df5617fcfeb823304e469c *R/StartMMD.R
 6ec31a09a27c958e089301dd918d14ca *inst/AnthropMMDShinyApp/calcIMD.R
@@ -13,6 +13,6 @@ ed1c00d423a1aedcd36a168fa643eedf *inst/AnthropMMDShinyApp/fisherTestTab.R
 bbb0edeed96d88f30c73cb305ff2f460 *inst/AnthropMMDShinyApp/ui.R
 cab1d8a1c6b9f95dd2c4d9d963067d51 *inst/AnthropMMDShinyApp/validDataMMD.R
 b5adcb5e9bc86d9411d5c30ceb84392d *inst/AnthropMMDShinyApp/www/kappa.css
-4392b7f35334337559c9d0c13bc5fa78 *inst/CITATION
-81703d6ae815542b8fa0ad4f257a4dbd *man/AnthropMMD-package.Rd
-08db164877bb3aeb7932886635abde87 *man/StartMMD.Rd
+a545ebf68d1c9f21cb41516ec73eef4c *inst/CITATION
+2bd7849627c30280b83fe92740e1e612 *man/AnthropMMD-package.Rd
+f7b7c8774b2d559eb004eec65f26667d *man/StartMMD.Rd
