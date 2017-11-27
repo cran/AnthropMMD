@@ -70,8 +70,13 @@ shinyUI(fluidPage(theme="kappa.css",
     					strong(textOutput("text_title_summary")), # cet element est calcul\'e dans server.R seulement apr\`es l'importation du fichier : il ne s'affiche donc qu'a ce moment
     					br(),
     					div(style="overflow:auto; width:100%;", tableOutput("tableResume")), # le "div" sert à mettre la table dans une frame avec scrollbar, si elle est large
-    					br(),
-    					uiOutput("button_download_summary") # le bouton de telechargement des resultats n'est calcul\'e / affich\'e qu'au bout du processus (cf. server.R)
+    					uiOutput("button_download_summary"), # le bouton de telechargement des resultats n'est calcul\'e / affich\'e qu'au bout du processus (cf. server.R)
+						br(),
+						strong(textOutput("text_title_pvalFisher")),
+						br(),
+						br(),
+						div(style="overflow:auto; width:100%;", tableOutput("tablePval")),
+						uiOutput("button_download_tablePval")
     				), 
     				# 2. L'onglet d'affichage du resultat des MMD :
 				tabPanel("MMD Statistics",
@@ -108,6 +113,9 @@ shinyUI(fluidPage(theme="kappa.css",
 				# 3. L'onglet d'affichage de l'eventuel graphique MDS :
 				tabPanel("MDS plot", 
 					helpText("A multidimensional scaling plot (MDS) is displayed below if and only if there are at least three active groups."),
+					br(),
+					selectInput("methodMDS", label="MDS method", choices=list("Classical metric MDS"="MMDS", "Kruskal's non-metric MDS"="NMDS"), selected="MMDS", multiple=FALSE),
+					br(),
 					plotOutput("plotMDS", width="80%"),
 					br(),
 					uiOutput("button_download_plotMDS") # le bouton de telechargement des resultats n'est calcul\'e / affich\'e qu'au bout du processus (cf. server.R)

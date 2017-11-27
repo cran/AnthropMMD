@@ -3,7 +3,7 @@
 \alias{AnthropMMD}
 \docType{package}
 \title{
-A Shiny user interface for Smith's Mean Measure of Divergence (MMD)
+An R-Shiny Application for Smith's Mean Measure of Divergence (MMD)
 }
 \description{
 Offers a Shiny user interface for the calculation of the mean measure of divergence, with facilities for trait selection and graphical representations.
@@ -12,8 +12,8 @@ Offers a Shiny user interface for the calculation of the mean measure of diverge
 \tabular{ll}{
 Package: \tab AnthropMMD\cr
 Type: \tab Package\cr
-Version: \tab 2.2.2\cr
-Date: \tab 2017-10-02\cr
+Version: \tab 2.3.0\cr
+Date: \tab 2017-11-27\cr
 License: \tab GPL >=2\cr
 }
 

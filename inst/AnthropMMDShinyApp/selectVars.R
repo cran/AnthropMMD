@@ -57,7 +57,7 @@ selectVars <- function(tab, k=10, excludeTraits, groups, formule) {
 		tabDisplay <- IMDs$SortedPos
 	} 
 	  else if (excludeTraits=="keepFisher") { # on elimine tous les traits ne montrant aucune difference significative au test exact de Fisher
-	  	tab <- fisherTestTab(tab)
+	  	tab <- fisherTestTab(tab)$informative
 	  	tabDisplay <- IMDs$Sorted[rownames(IMDs$Sorted) %in% colnames(tab), ]
 	  
 	} else { # il n'y avait aucune strategie particuliere d'exclusion de variables

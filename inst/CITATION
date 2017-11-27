@@ -1,16 +1,10 @@
-year <- sub("-.*", "", meta$Date)
-note <- sprintf("R package version %s", meta$Version)
-
-bibentry(bibtype = "Manual",
-         title = "{AnthropMMD}: A Shiny GUI for Smith's Mean Measure of Divergence (MMD)",
-         author = c(person("Frédéric", "Santos")),
-         year = year,
-         note = note,
-         url = "https://CRAN.R-project.org/package=AnthropMMD")
-
 bibentry(bibtype = "Article",
-        title = "{AnthropMMD}: an R package with a graphical user interface for the mean measure of divergence",
-        author = c(person("Frédéric", "Santos")),
-        year = "in press",
+	title = "{AnthropMMD}: an R package with a graphical user interface for the mean measure of divergence",
+	author = c(person("Frédéric", "Santos")),
+	year = "in press",
 	journal = "American Journal of Physical Anthropology",
-        note = "DOI: 10.1002/ajpa.23336")
+	doi = "10.1002/ajpa.23336",
+	header = "Please cite AnthropMMD in publications using:",
+	textVersion = "Santos, F. (in press). AnthropMMD: an R package with a graphical user interface for the mean measure of divergence. American Journal of Physical Anthropology. doi: 10.1002/ajpa.23336"	
+)
+

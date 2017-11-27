@@ -9,7 +9,8 @@ shinyServer(function(input, output, session) {
 	source("selectVars.R")
 	source("tableToFreq.R")
 	source("validDataMMD.R")
-
+	library(MASS)
+	
 	myenvg = new.env() # environnement priv\'e au package ; contiendra le jeu de donnees (vu comme une variable globale)
 
 	#########################################################
@@ -105,6 +106,38 @@ shinyServer(function(input, output, session) {
 		write.csv(dat()$TableCalcMMD, file)
 	}) # la fonction declenchee par le bouton de telechargement
 
+	output$text_title_pvalFisher <- reactive({
+					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1 & input$exclusionStrategy=="keepFisher") {
+						return("p-values of Fisher's exact tests for pairwise comparisons of frequencies")
+					} else {
+						return("")
+					}
+	})
+	
+	tablePvaleurs <- reactive({
+					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1 & input$exclusionStrategy=="keepFisher") {
+						dataTemp <- selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits="none", groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD))$TableCalcMMD
+						return(fisherTestTab(dataTemp)$pval)
+					} else {
+						return()
+					}
+	})
+	
+	output$tablePval <- renderTable(tablePvaleurs(), rownames=TRUE, digits=3)
+	
+	output$button_download_tablePval <- renderUI({  # ce bouton n'est gener\'e que lorsque l'utilisateur a upload\'e les donnees et lanc\'e le calcul 
+					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1 & input$exclusionStrategy=="keepFisher") { 
+						downloadButton("download_pval", "Download this table [CSV file]")
+					} else { 
+						return() 
+					}
+	})
+	
+	output$download_pval <- downloadHandler(filename='pairwise_fisher_tests_pvalues.csv', content=function(file) {
+		dataTemp <- selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits="none", groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD))$TableCalcMMD
+		write.csv(fisherTestTab(dataTemp)$pval, file)
+	}) #
+	
 	#######################################################################################
 	# 2.2. Remplir l'onglet "MMD Statistics" avec la matrice de MMD et les resultats divers
 	# 2.2-a) Matrice de MMD "classique", avec SD :
@@ -167,7 +200,11 @@ shinyServer(function(input, output, session) {
 	output$plotMDS <- renderPlot({
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>2) { # si un jeu de donnees valide a bien ete fourni et qu'on a au moins 3 groupes !
 						mmdval <- resultatsMMD()$MMDSym
-						coor <- cmdscale(mmdval, k=2)
+						if (input$methodMDS=="MMDS") {
+							coor <- cmdscale(mmdval, k=2)
+						} else if (input$methodMDS=="NMDS") {
+							coor <- isoMDS(mmdval, k=2, trace=FALSE)$points
+						}
 						if (ncol(coor)==2 & any(mmdval>0)) {
 							plot(coor[,1], coor[,2], pch=16, xlab="", ylab="", axes=FALSE, main="Multidimensional scaling of MMD values",
 						     ylim=c(min(coor[,2]), 1.1*max(coor[,2])), asp=1)
@@ -189,7 +226,11 @@ shinyServer(function(input, output, session) {
 	output$button_download_plotMDS <- renderUI({  # ce bouton n'est gener\'e que lorsque l'utilisateur a upload\'e les donnees et lanc\'e le calcul 
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>2 ) { 
 						mmdval <- resultatsMMD()$MMDSym
-						coor <- cmdscale(mmdval, k=2)
+						if (input$methodMDS=="MMDS") {
+							coor <- cmdscale(mmdval, k=2)
+						} else if (input$methodMDS=="NMDS") {
+							coor <- isoMDS(mmdval, k=2, trace=FALSE)$points
+						}
 						if (ncol(coor)==2 & any(mmdval>0)) {
 							downloadButton("download_plotMDS", "Download this plot [PNG file]")
 						} else {
@@ -202,7 +243,11 @@ shinyServer(function(input, output, session) {
 
 	output$download_plotMDS <- downloadHandler(filename='MDS_plot.png', content=function(file) { # la fonction declenchee par le bouton de telechargement
 					mmdval <- resultatsMMD()$MMDSym
-					coor <- cmdscale(mmdval, k=2)
+					if (input$methodMDS=="MMDS") {
+						coor <- cmdscale(mmdval, k=2)
+					} else if (input$methodMDS=="NMDS") {
+						coor <- isoMDS(mmdval, k=2, trace=FALSE)$points
+					}
 					png(file, width=900, height=900)
 						par(cex=1.15)
 						plot(coor[,1], coor[,2], pch=16, xlab="", ylab="", axes=FALSE, main="Multidimensional scaling of MMD values",
