@@ -8,7 +8,7 @@ fisherTestTab <- function(tab) {
 	nomsGroupes <- substr(rownames(tab)[1:nbGroupes], 3, nchar(rownames(tab)[1:nbGroupes])) # le nom des groupes
 	MatRes <- matrix(NA, ncol=nbVars, nrow=nbGroupes*(nbGroupes-1)/2) # matrice de p-valeurs qui dira si chaque trait est informatif ou non pour chaque paire de groupes
 	colnames(MatRes) <- colnames(tab)
-	rownames(MatRes) <- 1:10 # initialisation à une valeur idiote pour éviter une erreur ci-dessous (il *faut* que le nom des lignes soit initialisé)
+	rownames(MatRes) <- 1:nrow(MatRes) # initialisation à une valeur idiote pour éviter une erreur ci-dessous (il *faut* que le nom des lignes soit initialisé)
 	
 	for (j in 1:nbVars) { # pour chaque trait...
 		compteurLignes <- 1
@@ -28,3 +28,4 @@ fisherTestTab <- function(tab) {
 	isInformative <- apply(MatRes, MARGIN=2, FUN= function(x) if (any(x<=0.05)) return(TRUE) else return(FALSE))
 	return(list(informative=tab[ , isInformative], pval=MatRes))
 }
+

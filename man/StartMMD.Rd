@@ -37,7 +37,7 @@ For both data types, column names are strongly recommended for better interpreta
 These four options are designed to avoid negative MMD values.
 \item Some groups/populations can be manually excluded from the analysis. This may be useful if very few individuals belonging to a given population could be recorded for the variables retained by the criteria described above.
 
-\item A MDS plot and a hierarchical clustering, done using MMD dissimilarities as inputs, are displayed in the last two tabs. As MMD can sometimes be negative, those negatives values are replaced by zeros, so that the MMD matrix can be seen as a symmetrical distance matrix. Please note that the MDS cannot be displayed if there is only one postive eigenvalue.
+\item A MDS plot and a hierarchical clustering, done using MMD dissimilarities as inputs, are displayed in the last two tabs. As MMD can sometimes be negative, those negatives values are replaced by zeros, so that the MMD matrix can be seen as a symmetrical distance matrix. Please note that the classical metric MDS cannot be displayed if there is only one postive eigenvalue, and that a non-metric MDS plot can be displayed only if all MMD values are strictly positive.
 }
 }
 \value{
@@ -50,13 +50,13 @@ The function returns no value by itself, but all results can be indivudally down
 }
 }
 \references{
-Harris, E. F. and Sjovold, T. (2004). Calculation of Smith's mean measure of divergence for intergroup comparisons using nonmetric data. Dental Anthropology, \bold{17}(3), 83--93.
+Harris, E. F. and Sjøvold, T. (2004). Calculation of Smith's mean measure of divergence for intergroup comparisons using nonmetric data. Dental Anthropology, \bold{17}(3), 83--93.
 
-Irish, J. (2010). The mean measure of divergence: Its utility in model-free and model-bound analyses relative to the Mahalanobis D2 distance for nonmetric traits. American Journal of Human Biology, \bold{22}, 378--395. DOI: 10.1002/ajhb.21010
+Irish, J. (2010). The mean measure of divergence: Its utility in model-free and model-bound analyses relative to the Mahalanobis D2 distance for nonmetric traits. American Journal of Human Biology, \bold{22}, 378--395. doi: 10.1002/ajhb.21010
 
-Nikita, E. (2015). A critical review of the mean measure of divergence and Mahalanobis distances using artificial data and new approaches to the estimation of biodistances employing nonmetric traits. American Journal of Physical Anthropology, \bold{157}, 284--294. DOI: 10.1002/ajpa.22708
+Nikita, E. (2015). A critical review of the mean measure of divergence and Mahalanobis distances using artificial data and new approaches to the estimation of biodistances employing nonmetric traits. American Journal of Physical Anthropology, \bold{157}, 284--294. doi: 10.1002/ajpa.22708
 
-Santos, F. (in press). AnthropMMD: an R package with a graphical user interface for the mean measure of divergence. American Journal of Physical Anthropology. DOI: 10.1002/ajpa.23336
+Santos, F. (in press). AnthropMMD: an R package with a graphical user interface for the mean measure of divergence. American Journal of Physical Anthropology. doi: 10.1002/ajpa.23336
 }
 \author{
 Frederic Santos, <frederic.santos@u-bordeaux.fr>

@@ -200,23 +200,27 @@ shinyServer(function(input, output, session) {
 	output$plotMDS <- renderPlot({
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>2) { # si un jeu de donnees valide a bien ete fourni et qu'on a au moins 3 groupes !
 						mmdval <- resultatsMMD()$MMDSym
+						mmdtoy <- mmdval; diag(mmdtoy) <- rep(1, nrow(mmdtoy))
 						if (input$methodMDS=="MMDS") {
 							coor <- cmdscale(mmdval, k=2)
-						} else if (input$methodMDS=="NMDS") {
+							if (ncol(coor)==2 & any(mmdval>0)) {
+								plot(coor[,1], coor[,2], pch=16, xlab="", ylab="", axes=FALSE, main="Classical multidimensional scaling of MMD values", ylim=c(min(coor[,2]), 1.1*max(coor[,2])), asp=1)
+								text(coor[,1], coor[,2], pos=3, labels=rownames(coor))
+							} else if (ncol(coor)==2 & all(mmdval==0)) { 
+								plot(x=0, y=0, xlab="", ylab="", axes=FALSE, xlim=c(-2,2), ylim=c(-2,2), pch="")
+								text(x=0, y=0.5, labels="The MMD matrix contains only zeros.", col="black")
+								text(x=0, y=-0.5, labels="Impossible to get a MDS plot.", col="black")
+							} else {
+								plot(x=0, y=0, xlab="", ylab="", axes=FALSE, xlim=c(-2,2), ylim=c(-2,2), pch="")
+								text(x=0, y=0, labels="The representation could not be computed in two dimensions.", col="black")
+							}
+						} else if (input$methodMDS=="NMDS" & all(mmdtoy>0)) {
 							coor <- isoMDS(mmdval, k=2, trace=FALSE)$points
-						}
-						if (ncol(coor)==2 & any(mmdval>0)) {
-							plot(coor[,1], coor[,2], pch=16, xlab="", ylab="", axes=FALSE, main="Multidimensional scaling of MMD values",
-						     ylim=c(min(coor[,2]), 1.1*max(coor[,2])), asp=1)
+							plot(coor[,1], coor[,2], pch=16, xlab="", ylab="", axes=FALSE, main="Non-metric multidimensional scaling of MMD values", ylim=c(min(coor[,2]), 1.1*max(coor[,2])), asp=1)
 							text(coor[,1], coor[,2], pos=3, labels=rownames(coor))
-						} else if (ncol(coor)==2 & all(mmdval==0)) { 
+						} else if (input$methodMDS=="NMDS" & any(mmdtoy<=0)) {
 							plot(x=0, y=0, xlab="", ylab="", axes=FALSE, xlim=c(-2,2), ylim=c(-2,2), pch="")
-							text(x=0, y=0.5, labels="The MMD matrix contains only zeros.", col="black")
-							text(x=0, y=-0.5, labels="Impossible to get a MDS plot.", col="black")
-													
-						} else {
-							plot(x=0, y=0, xlab="", ylab="", axes=FALSE, xlim=c(-2,2), ylim=c(-2,2), pch="")
-							text(x=0, y=0, labels="The representation could not be computed in two dimensions.", col="black")
+							text(x=0, y=-0.5, labels="Impossible to get a non-metric MDS plot with a MMD matrix containing zero or negative dissimilarities.", col="black")
 						}
 					} else { # sinon, s'il n'y a pas de donnees ou qu'elles sont non-valides,
 						return() # on n'affiche rien pour l'instant.
@@ -226,10 +230,13 @@ shinyServer(function(input, output, session) {
 	output$button_download_plotMDS <- renderUI({  # ce bouton n'est gener\'e que lorsque l'utilisateur a upload\'e les donnees et lanc\'e le calcul 
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>2 ) { 
 						mmdval <- resultatsMMD()$MMDSym
+						mmdtoy <- mmdval; diag(mmdtoy) <- rep(1, nrow(mmdtoy))
 						if (input$methodMDS=="MMDS") {
 							coor <- cmdscale(mmdval, k=2)
-						} else if (input$methodMDS=="NMDS") {
+						} else if (input$methodMDS=="NMDS" & all(mmdtoy>0)) {
 							coor <- isoMDS(mmdval, k=2, trace=FALSE)$points
+						} else {
+							return()
 						}
 						if (ncol(coor)==2 & any(mmdval>0)) {
 							downloadButton("download_plotMDS", "Download this plot [PNG file]")
