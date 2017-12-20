@@ -2,8 +2,8 @@ Package: AnthropMMD
 Type: Package
 Title: An R-Shiny Application for Smith's Mean Measure of Divergence
         (MMD)
-Version: 2.3.2
-Date: 2017-12-03
+Version: 2.3.3
+Date: 2017-12-20
 Author: Frederic Santos
 Maintainer: Frederic Santos <frederic.santos@u-bordeaux.fr>
 Depends: R (>= 3.4.0), shiny
@@ -12,6 +12,6 @@ Description: Offers a Shiny user interface for the calculation of the mean measu
 License: GPL (>= 2)
 Encoding: UTF-8
 NeedsCompilation: no
-Packaged: 2017-12-03 10:50:55 UTC; Pingouache
+Packaged: 2017-12-20 07:51:34 UTC; pingouache
 Repository: CRAN
-Date/Publication: 2017-12-04 05:54:58 UTC
+Date/Publication: 2017-12-20 07:59:47 UTC

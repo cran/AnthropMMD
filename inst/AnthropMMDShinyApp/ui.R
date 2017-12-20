@@ -52,7 +52,10 @@ shinyUI(fluidPage(theme="kappa.css",
 			h4("Trait selection"),
 			fluidRow(
 				column(6,
-					radioButtons("exclusionStrategy", label="Exclusion strategy", choices=list("None"="none", "Exclude nonpolymorphic traits"="excludeNPT", "Exclude quasi-nonpolymorphic traits"="excludeQNPT", "Use Fisher's exact test (may be slow)"="keepFisher", "Exclude traits with negative overall MD"="excludeNOMD"))
+					radioButtons("exclusionStrategy", label="Exclusion strategy", choices=list("None"="none", "Exclude nonpolymorphic traits"="excludeNPT", "Exclude quasi-nonpolymorphic traits"="excludeQNPT", "Use Fisher's exact test (may be slow)"="keepFisher", "Exclude traits with overall MD lower than..."="excludeNOMD")),
+					conditionalPanel(condition="input.exclusionStrategy == 'excludeNOMD'", # panneau qui ne s'affiche que pour le critère overall MD
+						numericInput("OMDvalue", label=NULL, value=0, step=0.05, min=0)
+					)
 				),
 				column(6,
 					uiOutput("regletteNbMinInd")

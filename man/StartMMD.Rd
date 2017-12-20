@@ -32,7 +32,7 @@ For both data types, column names are strongly recommended for better interpreta
 \item \sQuote{Exclude nonpolymorphic traits} removes all the traits showing no variability at all, i.e. with the same value (\sQuote{0} or \sQuote{1}) for all individuals. 
 \item \sQuote{Exclude quasi-nonpolymorphic traits} also removes the traits whose variability is only due to a single individual: for example, a trait with only one positive observation in the whole dataset. 
 \item \sQuote{Use Fisher's exact test} implements the advice given by Harris and Sjovold (2004) to select contributory traits, defined as those \dQuote{showing a statistically significant difference between at least one pair of the groups being evaluated}. Fisher's exact tests are performed for each pair of groups, and the traits showing no intergroup difference at all are excluded. Note that if you have a large number of groups (say, 10 groups), a trait with strictly equal frequencies for the last 8 groups may be considered as useful according to this criterion if there is a significant difference for the first two groups. This criterion will select all traits that can be useful for a given pair of groups, even if they are nondiscriminatory for all the other ones.
-\item \sQuote{Exclude traits with negative overall MD} is a simple way of removing the traits with quite similar frequencies across groups (the \sQuote{overall MD} is defined as the sum of the variable's measures of divergence over all pairs of groups). This criterion tends to select the traits whose frequency differs substantially across most or all groups.
+\item \sQuote{Exclude traits with overall MD} lower than a given threshold: it is a simple way of removing the traits with quite similar frequencies across groups (the \sQuote{overall MD} is defined as the sum of the variable's measures of divergence over all pairs of groups). This criterion aims to select the traits whose frequency differs substantially across most or all groups.
 }
 These four options are designed to avoid negative MMD values.
 \item Some groups/populations can be manually excluded from the analysis. This may be useful if very few individuals belonging to a given population could be recorded for the variables retained by the criteria described above.
@@ -50,13 +50,13 @@ The function returns no value by itself, but all results can be indivudally down
 }
 }
 \references{
-Harris, E. F. and Sjøvold, T. (2004). Calculation of Smith's mean measure of divergence for intergroup comparisons using nonmetric data. Dental Anthropology, \bold{17}(3), 83--93.
+Harris, E. F. and Sjøvold, T. (2004). Calculation of Smith's mean measure of divergence for intergroup comparisons using nonmetric data. Dental Anthropology, \bold{17}(3), 83-93.
 
-Irish, J. (2010). The mean measure of divergence: Its utility in model-free and model-bound analyses relative to the Mahalanobis D2 distance for nonmetric traits. American Journal of Human Biology, \bold{22}, 378--395. doi: 10.1002/ajhb.21010
+Irish, J. (2010). The mean measure of divergence: Its utility in model-free and model-bound analyses relative to the Mahalanobis D2 distance for nonmetric traits. American Journal of Human Biology, \bold{22}, 378-395. doi: 10.1002/ajhb.21010
 
-Nikita, E. (2015). A critical review of the mean measure of divergence and Mahalanobis distances using artificial data and new approaches to the estimation of biodistances employing nonmetric traits. American Journal of Physical Anthropology, \bold{157}, 284--294. doi: 10.1002/ajpa.22708
+Nikita, E. (2015). A critical review of the mean measure of divergence and Mahalanobis distances using artificial data and new approaches to the estimation of biodistances employing nonmetric traits. American Journal of Physical Anthropology, \bold{157}, 284-294. doi: 10.1002/ajpa.22708
 
-Santos, F. (in press). AnthropMMD: an R package with a graphical user interface for the mean measure of divergence. American Journal of Physical Anthropology. doi: 10.1002/ajpa.23336
+Santos, F. (2018). AnthropMMD: an R package with a graphical user interface for the mean measure of divergence. American Journal of Physical Anthropology, \bold{165}(1), 200-205. doi: 10.1002/ajpa.23336
 }
 \author{
 Frederic Santos, <frederic.santos@u-bordeaux.fr>

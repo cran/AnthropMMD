@@ -54,7 +54,7 @@ shinyServer(function(input, output, session) {
 	
 	dat <- reactive({ # ici, on insere une expression qui retournera en temps reel le jeu de donnees correspondant aux choix de filtrage de l'utilisateur
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) { # si un jeu de donnees a bien ete fourni et qu'il est valide !
-						selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits=as.character(input$exclusionStrategy), groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD))
+						selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits=as.character(input$exclusionStrategy), groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD), OMDvalue=input$OMDvalue)
 					} else { # sinon, s'il n'y a pas de donnees ou qu'elles sont non-valides,
 						return() # on n'affiche rien pour l'instant (evite l'affichage d'erreurs en rouge ou de "resultats vides" en l'absence de fichier correct)
 					}
@@ -72,7 +72,7 @@ shinyServer(function(input, output, session) {
 	
 	temp <- reactive({ # sera comme dat(), sauf qu'on ne filtre pas en fonction du nb d'individus, on filtre juste en fonction des variables
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) { # si un jeu de donnees a bien ete fourni et qu'il est valide !
-						selectVars(get("dat", envir=myenvg), k=1, excludeTraits=as.character(input$exclusionStrategy), groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD))
+						selectVars(get("dat", envir=myenvg), k=1, excludeTraits=as.character(input$exclusionStrategy), groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD), OMDvalue=input$OMDvalue)
 					} else { # sinon, s'il n'y a pas de donnees ou qu'elles sont non-valides,
 						return() # on n'affiche rien pour l'instant (evite l'affichage d'erreurs en rouge ou de "resultats vides" en l'absence de fichier correct)
 					}
@@ -116,7 +116,7 @@ shinyServer(function(input, output, session) {
 	
 	tablePvaleurs <- reactive({
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1 & input$exclusionStrategy=="keepFisher") {
-						dataTemp <- selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits="none", groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD))$TableCalcMMD
+						dataTemp <- selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits="none", groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD), OMDvalue=input$OMDvalue)$TableCalcMMD
 						return(fisherTestTab(dataTemp)$pval)
 					} else {
 						return()
@@ -134,7 +134,7 @@ shinyServer(function(input, output, session) {
 	})
 	
 	output$download_pval <- downloadHandler(filename='pairwise_fisher_tests_pvalues.csv', content=function(file) {
-		dataTemp <- selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits="none", groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD))$TableCalcMMD
+		dataTemp <- selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits="none", groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD), OMDvalue=input$OMDvalue)$TableCalcMMD
 		write.csv(fisherTestTab(dataTemp)$pval, file)
 	}) #
 	

@@ -1,4 +1,4 @@
-selectVars <- function(tab, k=10, excludeTraits, groups, formule) {
+selectVars <- function(tab, k=10, excludeTraits, OMDvalue=NULL, groups, formule) {
  # tab : tableau de type "table"
  # k : nombre minimal d'individus par groupes pour que le caract\`ere soit retenu dans le calcul du MMD.
  # excludeTraits : a choisir parmi "none", "excludeNPT", "excludeQNPT", "excludeNCT" : definit la strategie (eventuelle) d'exclusion automatique de traits insuffisamment polymorphiques
@@ -33,7 +33,7 @@ selectVars <- function(tab, k=10, excludeTraits, groups, formule) {
 
 	###################################################################################################################
 	# 2. Selection supplementaire, le cas echeant, pour eliminer des caracteres trop similaires dans tous les groupes :
-	IMDs <- calcIMD(tab=tab, formule=formule)
+	IMDs <- calcIMD(tab=tab, formule=formule, OMDvalue=OMDvalue)
 	if (excludeTraits=="excludeNPT") { # si on ne retient pas les caracteres non polymorphiques, on procede ci-dessous a leur exclusion
 		polym <- rep(NA, ncol(tab))
   		for (j in 1:ncol(tab)) {
@@ -52,7 +52,7 @@ selectVars <- function(tab, k=10, excludeTraits, groups, formule) {
 		tab <- tab[ , avirer]
 		tabDisplay <- IMDs$Sorted[rownames(IMDs$Sorted) %in% colnames(tab), ]
 	} 
-	  else if (excludeTraits=="excludeNOMD") { # on elimine tous les traits avec une contribution neagtive a la MMD
+	  else if (excludeTraits=="excludeNOMD") { # on elimine tous les traits avec une contribution insuffisante a la MMD
 		tab <- tab[ , rownames(IMDs$Pos)]
 		tabDisplay <- IMDs$SortedPos
 	} 
