@@ -30,14 +30,14 @@ calcMMD <- function(dat, formule) {
   			MMDVect <- vector("numeric", length(Mat_eff[1,])) 
   			if (j > i) { # on est au-dessus de la diagonale du tableau : on remplit avec les valeurs MMD
    				for (k in 1:length(MMDVect)) { 
-    				MMDVect[k] <- thetaDiff(Mat_eff[i,k], Mat_prop[i,k], Mat_eff[j,k], Mat_prop[j,k]) 
+    					MMDVect[k] <- thetaDiff(Mat_eff[i,k], Mat_prop[i,k], Mat_eff[j,k], Mat_prop[j,k]) 
    				}
    				MMDMatrix[i, j] <- sum(MMDVect) / length(MMDVect) 
  			} else if (i ==j) { # on est sur la diagonale du tableau
    				MMDMatrix[i, j] <- 0 # on affecte donc une valeur nulle
   			} else { # donc i > j, on est sous la diagonale et on affecte l'\'ecart-type du MMD
    				for (k in 1:length(MMDVect)) { 
-    				MMDVect[k] <- sdFormula(Mat_eff[i,k], Mat_eff[j,k]) 
+    					MMDVect[k] <- sdFormula(Mat_eff[i,k], Mat_eff[j,k]) 
    				}
    				MMDMatrix[i, j] <- sqrt(2*sum(MMDVect)) / length(MMDVect)
   			}

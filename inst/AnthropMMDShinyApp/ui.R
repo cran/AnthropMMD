@@ -9,12 +9,12 @@ shinyUI(fluidPage(theme="kappa.css",
  	"),
 	sidebarLayout(
 		#############################################################
-		# I] Le menu de gauche, presentant les options de l'analyse :
+		# I] Le menu de gauche, présentant les options de l'analyse :
 		sidebarPanel(
-			# 1.a) Choix du type de donnees :
+			# 1.a) Choix du type de données :
 			fileInput("file", label=h3("1. Data import"), accept=c(".csv", ".txt")),
 			radioButtons("typeData", label=strong("Type of dataset"), choices=list("Raw binary dataset"="raw", "Table of n's and absolute frequencies for each group"="table")),
-			# 1.b) Specification des info utiles pour l'import des donnees :
+			# 1.b) Specification des info utiles pour l'import des données :
 			conditionalPanel(condition="input.typeData == 'raw'", # panneau qui ne s'affiche que pour un "raw dataset"
 				fluidRow( # on découpe en lignes et colonnes
 					column(6,
@@ -39,11 +39,11 @@ shinyUI(fluidPage(theme="kappa.css",
 				),
 				helpText("No missing values allowed here. Row names are mandatory.")
 			),
-			actionButton("loadData", "Load dataset"), # bouton de chargement de donnees (server.R attend un clic pour demarrer)
+			actionButton("loadData", "Load dataset"), # bouton de chargement de données (server.R attend un clic pour démarrer)
 			br(),
 			br(),
 			
-			# 2. Parametres divers de l'analyse :
+			# 2. Paramètres divers de l'analyse :
 			h3("2. Analysis settings"),
 			selectizeInput("selectGroups", label=h4("Selection of active groups"), choices=NULL, multiple=TRUE),
 			
@@ -64,16 +64,16 @@ shinyUI(fluidPage(theme="kappa.css",
 		),
 
 		############################################################
-		# II] Le panneau principal, pour l'affichage des resultats :
+		# II] Le panneau principal, pour l'affichage des résultats :
 		mainPanel(
 			tabsetPanel(
-				# 1. L'onglet d'affichage des donnees filtrees :
+				# 1. L'onglet d'affichage des données filtrées :
     				tabPanel("Summary",
     					br(),
-    					strong(textOutput("text_title_summary")), # cet element est calcul\'e dans server.R seulement apr\`es l'importation du fichier : il ne s'affiche donc qu'a ce moment
+    					strong(textOutput("text_title_summary")), # cet element est calculé dans server.R seulement après l'importation du fichier : il ne s'affiche donc qu'a ce moment
     					br(),
     					div(style="overflow:auto; width:100%;", tableOutput("tableResume")), # le "div" sert à mettre la table dans une frame avec scrollbar, si elle est large
-    					uiOutput("button_download_summary"), # le bouton de telechargement des resultats n'est calcul\'e / affich\'e qu'au bout du processus (cf. server.R)
+    					uiOutput("button_download_summary"), # le bouton de téléchargement des résultats n'est calculé / affiché qu'au bout du processus (cf. server.R)
 						br(),
 						strong(textOutput("text_title_pvalFisher")),
 						br(),
@@ -81,31 +81,31 @@ shinyUI(fluidPage(theme="kappa.css",
 						div(style="overflow:auto; width:100%;", tableOutput("tablePval")),
 						uiOutput("button_download_tablePval")
     				), 
-    				# 2. L'onglet d'affichage du resultat des MMD :
+    				# 2. L'onglet d'affichage du résultat des MMD :
 				tabPanel("MMD Statistics",
-					fluidRow( # grille 2x2 pourl'affichage des resultats
+					fluidRow( # grille 2x2 pour l'affichage des résultats
 						column(6,
 							br(),
-    							strong(textOutput("text_table_MMDSym")), # cet element est calcul\'e dans server.R seulemt apr\`es l'importation du fichier
+    							strong(textOutput("text_table_MMDSym")), # cet element est calculé dans server.R seulemt après l'importation du fichier
     							br(),
     							div(style="overflow:auto; width:100%;", tableOutput("tableMMDSym")),
     							uiOutput("button_download_tableMMDSym"),
     							br(),
     							br(),
-    							strong(textOutput("text_table_IMD")), # cet element est calcul\'e dans server.R seulemt apr\`es l'importation du fichier
+    							strong(textOutput("text_table_IMD")), # cet element est calculé dans server.R seulemt après l'importation du fichier
     							br(),
     							div(style="overflow:auto; height:210px; width:50%;", tableOutput("tableIMD")),
     							uiOutput("button_download_tableIMD")
     						),
     						column(6,
 							br(),
-							strong(textOutput("text_table_MMD")), # cet element est calcul\'e dans server.R seulemt apr\`es l'importation du fichier
+							strong(textOutput("text_table_MMD")), # cet element est calculé dans server.R seulemt après l'importation du fichier
 							br(),
 							div(style="overflow:auto; width:100%;", tableOutput("tableMMD")),
 							uiOutput("button_download_tableMMD"),
 							br(),
 							br(),
-							strong(textOutput("text_table_MMDSignif")), # cet element est calcul\'e dans server.R seulemt apr\`es l'importation du fichier
+							strong(textOutput("text_table_MMDSignif")), # cet element est calculé dans server.R seulemt après l'importation du fichier
 							br(),
 							div(style="overflow:auto; width:100%;", tableOutput("tableMMDSignif")),
 							uiOutput("button_download_tableMMDSignif")
@@ -113,17 +113,21 @@ shinyUI(fluidPage(theme="kappa.css",
     						)
     					)
 				), 
-				# 3. L'onglet d'affichage de l'eventuel graphique MDS :
+				# 3. L'onglet d'affichage de l'éventuel graphique MDS :
 				tabPanel("MDS plot", 
 					helpText("A multidimensional scaling plot (MDS) is displayed below if and only if there are at least three active groups."),
 					br(),
-					selectInput("methodMDS", label="MDS method", choices=list("Classical metric MDS"="MMDS", "Kruskal's non-metric MDS"="NMDS"), selected="MMDS", multiple=FALSE),
+					selectInput("methodMDS", label="MDS method", choices=list("Classical metric MDS (a.k.a. PCoA)"="MMDS", "SMACOF, interval type"="interval", "SMACOF, ratio type"="ratio", "SMACOF, ordinal (nonmetric) MDS"="ordinal"), selected="MMDS", multiple=FALSE),
+					checkboxInput("axesMDSplot", label="Display axes on the MDS plot", value=FALSE),
+					conditionalPanel(condition="input.methodMDS != 'MMDS'",
+						checkboxInput("checkboxStress", label="Display Stress-1 value on the MDS plot (SMACOF methods only)", value=FALSE)
+					),
 					br(),
 					plotOutput("plotMDS", width="80%"),
 					br(),
-					uiOutput("button_download_plotMDS") # le bouton de telechargement des resultats n'est calcul\'e / affich\'e qu'au bout du processus (cf. server.R)
+					uiOutput("button_download_plotMDS") # le bouton de téléchargement des résultats n'est calculé / affiché qu'au bout du processus (cf. server.R)
 				),
-				# 4. L'onglet d'affichage de l'eventuel graphique CAH :
+				# 4. L'onglet d'affichage de l'éventuel graphique CAH :
 				tabPanel("Hierarchical clustering", 
 					helpText("A hierarchical clustering using Ward's method is displayed below if and only if there are at least three active groups."),
 					br(),
@@ -131,7 +135,7 @@ shinyUI(fluidPage(theme="kappa.css",
 					br(),
 					plotOutput("plotCAH", width="80%"),
 					br(),
-					uiOutput("button_download_plotCAH") # le bouton de telechargement des resultats n'est calcul\'e / affich\'e qu'au bout du processus (cf. server.R)
+					uiOutput("button_download_plotCAH") # le bouton de téléchargement des résultats n'est calculé / affiché qu'au bout du processus (cf. server.R)
 				)
 			)
 		)

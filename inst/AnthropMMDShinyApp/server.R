@@ -4,12 +4,13 @@ shinyServer(function(input, output, session) {
 	source("calcMMD.R")
 	source("extractGroups.R")
 	source("fisherTestTab.R")
+	source("gphMDS.R")
 	source("max3.R")
 	source("rawToTable.R")
 	source("selectVars.R")
 	source("tableToFreq.R")
 	source("validDataMMD.R")
-	library(MASS)
+	library(smacof)
 	
 	myenvg = new.env() # environnement priv\'e au package ; contiendra le jeu de donnees (vu comme une variable globale)
 
@@ -199,29 +200,7 @@ shinyServer(function(input, output, session) {
 	# 2.3. Remplir l'onglet "MDS plot" avec un MDS *seulement s'il y a au moins de trois groupes*
 	output$plotMDS <- renderPlot({
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>2) { # si un jeu de donnees valide a bien ete fourni et qu'on a au moins 3 groupes !
-						mmdval <- resultatsMMD()$MMDSym
-						mmdtoy <- mmdval; diag(mmdtoy) <- rep(1, nrow(mmdtoy))
-						if (input$methodMDS=="MMDS") {
-							coor <- cmdscale(mmdval, k=2)
-							if (ncol(coor)==2 & any(mmdval>0)) {
-								plot(coor[,1], coor[,2], pch=16, xlab="", ylab="", axes=FALSE, main="Classical multidimensional scaling of MMD values", ylim=c(min(coor[,2]), 1.1*max(coor[,2])), asp=1)
-								text(coor[,1], coor[,2], pos=3, labels=rownames(coor))
-							} else if (ncol(coor)==2 & all(mmdval==0)) { 
-								plot(x=0, y=0, xlab="", ylab="", axes=FALSE, xlim=c(-2,2), ylim=c(-2,2), pch="")
-								text(x=0, y=0.5, labels="The MMD matrix contains only zeros.", col="black")
-								text(x=0, y=-0.5, labels="Impossible to get a MDS plot.", col="black")
-							} else {
-								plot(x=0, y=0, xlab="", ylab="", axes=FALSE, xlim=c(-2,2), ylim=c(-2,2), pch="")
-								text(x=0, y=0, labels="The representation could not be computed in two dimensions.", col="black")
-							}
-						} else if (input$methodMDS=="NMDS" & all(mmdtoy>0)) {
-							coor <- isoMDS(mmdval, k=2, trace=FALSE)$points
-							plot(coor[,1], coor[,2], pch=16, xlab="", ylab="", axes=FALSE, main="Non-metric multidimensional scaling of MMD values", ylim=c(min(coor[,2]), 1.1*max(coor[,2])), asp=1)
-							text(coor[,1], coor[,2], pos=3, labels=rownames(coor))
-						} else if (input$methodMDS=="NMDS" & any(mmdtoy<=0)) {
-							plot(x=0, y=0, xlab="", ylab="", axes=FALSE, xlim=c(-2,2), ylim=c(-2,2), pch="")
-							text(x=0, y=-0.5, labels="Impossible to get a non-metric MDS plot with a MMD matrix containing zero or negative dissimilarities.", col="black")
-						}
+						gphMDS(mmdval=resultatsMMD()$MMDSym, methodMDS=input$methodMDS, displayAxes=input$axesMDSplot, displayStress=input$checkboxStress)
 					} else { # sinon, s'il n'y a pas de donnees ou qu'elles sont non-valides,
 						return() # on n'affiche rien pour l'instant.
 					}
@@ -233,8 +212,8 @@ shinyServer(function(input, output, session) {
 						mmdtoy <- mmdval; diag(mmdtoy) <- rep(1, nrow(mmdtoy))
 						if (input$methodMDS=="MMDS") {
 							coor <- cmdscale(mmdval, k=2)
-						} else if (input$methodMDS=="NMDS" & all(mmdtoy>0)) {
-							coor <- isoMDS(mmdval, k=2, trace=FALSE)$points
+						} else if (input$methodMDS!="MMDS" & all(mmdtoy>0)) {
+							coor <- smacofSym(as.dist(mmdval), type=input$methodMDS)$conf
 						} else {
 							return()
 						}
@@ -249,17 +228,9 @@ shinyServer(function(input, output, session) {
 	})
 
 	output$download_plotMDS <- downloadHandler(filename='MDS_plot.png', content=function(file) { # la fonction declenchee par le bouton de telechargement
-					mmdval <- resultatsMMD()$MMDSym
-					if (input$methodMDS=="MMDS") {
-						coor <- cmdscale(mmdval, k=2)
-					} else if (input$methodMDS=="NMDS") {
-						coor <- isoMDS(mmdval, k=2, trace=FALSE)$points
-					}
-					png(file, width=900, height=900)
-						par(cex=1.15)
-						plot(coor[,1], coor[,2], pch=16, xlab="", ylab="", axes=FALSE, main="Multidimensional scaling of MMD values",
-						     ylim=c(min(coor[,2]), 1.1*max(coor[,2])), asp=1)
-						text(coor[,1], coor[,2], pos=3, labels=rownames(coor))
+					png(file, width=800, height=800)
+						par(cex=1.16)
+						gphMDS(mmdval=resultatsMMD()$MMDSym, methodMDS=input$methodMDS, displayAxes=input$axesMDSplot, displayStress=input$checkboxStress)
 					dev.off()
 	})
 	
@@ -294,7 +265,7 @@ shinyServer(function(input, output, session) {
 	output$download_plotCAH <- downloadHandler(filename='Hierarchical_clustering_MMD.png', content=function(file) { # la fonction declenchee par le bouton de telechargement
 					distances <- as.dist(resultatsMMD()$MMDSym) 
 					png(file, width=900, height=900)
-						par(cex=1.15)
+						par(cex=1.16)
 						plot(hclust(distances, method=input$methodCAH), main="Hierarchical clustering", xlab="")
 					dev.off()
 	})	
