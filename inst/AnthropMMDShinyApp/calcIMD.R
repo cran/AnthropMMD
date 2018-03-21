@@ -1,6 +1,9 @@
 calcIMD <- function(tab, formule, OMDvalue=0) {
-# fonction qui calcule les mesures individuelles de divergence de chaque variable
-# pour cela elle utilise tab (tableau d'effectifs) et les parametres fournis par l'utilisateur a travers le GUI (fomule)
+# tab : dataframe, les données.
+# formule : chaîne de caractères, "Anscombe" ou "Freeman"
+# OMDvalue : le seuil d'OMD (overall measure of divergence) retenu par l'utilisateur dans l'UI.
+# Fonction qui calcule les mesures individuelles de divergence de chaque variable.
+# output -> liste de 4 éléments : cf. description ci-dessous.
 
 	nbGroupes <- nrow(tab)/2
 	Mat_eff <- tab[1:nbGroupes, ] # la matrice des effectifs
@@ -24,7 +27,7 @@ calcIMD <- function(tab, formule, OMDvalue=0) {
 
  		for (j in 1:nbGroupes) { # pour chaque paire de groupes
   			for (k in 1:nbGroupes) {
-  				if (j > k) { # seulement si on est dans la partie triangulaire (strictement) inferieure de la matrice
+  				if (j > k) { # seulement si on est dans la partie triangulaire (strictement) inférieure de la matrice
    					tempMatrix[j,k] <- thetadiff(Mat_eff[j,i], Mat_prop[j,i], Mat_eff[k,i], Mat_prop[k,i])
    				}
   			}
@@ -33,9 +36,9 @@ calcIMD <- function(tab, formule, OMDvalue=0) {
 		IMDMatrix[i,1] <- sum(tempMatrix)
 	}
 	
-	# IMDMatrix = les valeurs d'IMD de chaque variable, donnees dans l'ordre d'origine du tableau de donnees
-	IMDMatrixSorted <- as.matrix(IMDMatrix[order(IMDMatrix[,1], decreasing=TRUE), ]) # les valeurs triees par ordre decroissant
-	IMDMatrixSortedPos <- as.matrix(IMDMatrixSorted[IMDMatrixSorted[,1]>OMDvalue, ]) # les valeurs *superieures a un seuil donne* triees par ordre decroissant
-	IMDMatrixPos <- as.matrix(IMDMatrix[IMDMatrix[,1]>OMDvalue, ]) # les valeurs *superieures a un seuil donne* dans l'ordre d'origine
+	# IMDMatrix = les valeurs d'IMD de chaque variable, triées dans l'ordre d'origine du tableau de données
+	IMDMatrixSorted <- as.matrix(IMDMatrix[order(IMDMatrix[,1], decreasing=TRUE), ]) # les valeurs triées par ordre décroissant
+	IMDMatrixSortedPos <- as.matrix(IMDMatrixSorted[IMDMatrixSorted[,1]>OMDvalue, ]) # les valeurs *supérieures a un seuil donné* triées par ordre décroissant
+	IMDMatrixPos <- as.matrix(IMDMatrix[IMDMatrix[,1]>OMDvalue, ]) # les valeurs *supérieures a un seuil donné* dans l'ordre d'origine
 	return(list("Matrix"=IMDMatrix, "Pos"=IMDMatrixPos, "Sorted"=IMDMatrixSorted, "SortedPos"=IMDMatrixSortedPos))
 }

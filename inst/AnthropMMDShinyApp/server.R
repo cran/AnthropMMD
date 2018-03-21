@@ -10,6 +10,7 @@ shinyServer(function(input, output, session) {
 	source("selectVars.R")
 	source("tableToFreq.R")
 	source("validDataMMD.R")
+	library(scatterplot3d)
 	library(smacof)
 	
 	myenvg = new.env() # environnement priv\'e au package ; contiendra le jeu de donnees (vu comme une variable globale)
@@ -24,12 +25,14 @@ shinyServer(function(input, output, session) {
 				if (input$rowNames) { # s'il y a les noms d'individus...
 					dat[,1] <- NULL # on les supprime (ils ne servent a rien ici)
 				}		
+				dat[,1] <- factor(dat[,1]) # au cas où l'utilisateur aurait juste mis "1", "2", etc., comme noms de groupes, ce ne serait pas reconnu comme facteur. On corrige ça ici.
 			} else if (input$typeData=="table") { # si c'est une table d'effectifs et frequences
 				dat <- read.table(input$file$datapath, header=input$colNamesTable, row.names=1, sep=input$fieldSepTable)
 			}
 			if (validDataMMD(dat, type=input$typeData)) { # on regarde si le fichier est bien valide
 				groups <- extractGroups(dat, type=input$typeData) # on extrait les groups presents dans les donnees
-				updateSelectizeInput(session, "selectGroups", choices=groups, selected=groups, server=TRUE) # et on met a jour la liste de selection des groupes.
+				updateSelectizeInput(session, "selectGroups", choices=groups, selected=groups, server=TRUE) # et on met a jour la liste de selection des groupes...
+				updateNumericInput(session, "MDSdim", value=2, min=2, max=ifelse(length(groups)>3,3,2)) # ... ainsi que a dim max admissible pour les MDS
 				output$text_title_summary <- renderText("Number of individuals and relative frequencies for each active variable within each group")
 				output$text_table_MMD <- renderText("MMD values (upper triangular part) and associated SD values (lower triangular part)") # on calcule aussi le titre des tables...
 				output$text_table_IMD <- renderText("Overall measure of divergence for each variable, sorted in decreasing order of discriminatory power") 
@@ -41,8 +44,8 @@ shinyServer(function(input, output, session) {
 				dat <- tableToFreq(dat)
 				assign("dat", dat, envir=myenvg) # on place le jeu de donnees (qui est desormais forcement de type table) dans l'environnement global
 				#updateSliderInput(session, "minNbInd", value=min(c(10, max3(dat))), min=1, max=max3(dat)) # on empeche par la suite la saisie de valeurs "nb min individus" trop elevees au vu des donnees
-			} else {
-				showModal(modalDialog(title = "Error", "Invalid file. Please read the help page for 'StartMMD'.", easyClose = TRUE))
+			} else { # le fichier n'est pas valide
+				showModal(modalDialog(title = "Error", "Invalid file. Please check the field separator, and make sure that there are at least two individuals in each group. Please read the help page of 'StartMMD' for detailed information.", easyClose = TRUE))
 			}
 		} else { # l'utilisateur avait oubli\'e de choisir un fichier
 			showModal(modalDialog(title = "Error", "Please select a file on your computer.", easyClose = TRUE))
@@ -53,13 +56,13 @@ shinyServer(function(input, output, session) {
 	# 2. ANALYSE MMD #
 	##################
 	
-	dat <- reactive({ # ici, on insere une expression qui retournera en temps reel le jeu de donnees correspondant aux choix de filtrage de l'utilisateur
-					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) { # si un jeu de donnees a bien ete fourni et qu'il est valide !
+	dat <- reactive({ # ici, on insère une expression qui retournera en temps réel le jeu de données correspondant aux choix de filtrage de l'utilisateur
+					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) { # si un jeu de données a bien été fourni et qu'il est valide !
 						selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits=as.character(input$exclusionStrategy), groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD), OMDvalue=input$OMDvalue)
-					} else { # sinon, s'il n'y a pas de donnees ou qu'elles sont non-valides,
-						return() # on n'affiche rien pour l'instant (evite l'affichage d'erreurs en rouge ou de "resultats vides" en l'absence de fichier correct)
+					} else { # sinon, s'il n'y a pas de données ou qu'elles sont non-valides,
+						return() # on n'affiche rien pour l'instant (évite l'affichage d'erreurs en rouge ou de "résultats vides" en l'absence de fichier correct)
 					}
-			}) # ce jeu de donnees est calcul\'e une fois pour toutes, et sera reutilis\'e a plusieurs reprises ci-dessous (evite des recalculs multiples a differents endroits)
+			}) # ce jeu de donnees est calculé une fois pour toutes, et sera reutilisé a plusieurs reprises ci-dessous (évite des recalculs multiples a differents endroits)
 	
 	resultatsMMD <- reactive({ # meme chose avec les resultats des MMD sur le jeu de donnes obtenu ci-dessus
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) { # si un jeu de donnees a bien ete fourni et qu'il est valide !
@@ -80,10 +83,10 @@ shinyServer(function(input, output, session) {
 			}) # ce jeu de donnees est calcul\'e une fois pour toutes, et sera reutilis\'e a plusieurs reprises ci-dessous (evite des recalculs multiples a differents endroits)
 	
 	calcNbMaxReglette <- reactive({ # sert a calculer dynamiquement la borne max de la reglette *en fonction des groupes en presence* ! (ce nb peut changer en fonction des groupes actifs)
-					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) {
+					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) { # si un jeu de données a bien été chargé...
 						max3(temp()$TableCalcMMD)
-					} else {
-						return(100)
+					} else { # sinon, par défaut,
+						return(100) # la valeur maximale est fixée à 100.
 					}
 			})	
 	
@@ -198,9 +201,31 @@ shinyServer(function(input, output, session) {
 
 	#############################################################################################
 	# 2.3. Remplir l'onglet "MDS plot" avec un MDS *seulement s'il y a au moins de trois groupes*
+	observeEvent(input$helpMDS, { # bouton d'aide pour le MDS
+		showModal(modalDialog(
+			title="Graphical options for MDS plots",
+			h4("Axes and scales"),
+			div("Making all axes use the same scale is strongly recommended in all cases: cf. I. Borg, P. Groenen and P. Mair (2013),",
+			span(em("Applied Multidimensional Scaling,")),
+			"Springer, chap. 7, p. 79. For a 3D-plot, since the third axis carries generally only a very small percentage of the total variability, you might want to uncheck this option to better visualize the distances along the third axis. In this case, the axes scales must be displayed on the plot, otherwise the plot would be misleading."),
+			h4("Goodness of fit values"),
+			p("For classical metric MDS, a common statistic is given: the sum of the eigenvalues of the first two axes, divided by the sum of all eigenvalues. It indicates the fraction of the total variance of the data represented in the MDS plot. This statistic comes from the '$GOF' value returned by the function 'cmdscale' (which is the basic R function for PCoA)."),
+			p("For SMACOF methods, the statistic given is the '$stress' value returned by the function smacofSym (from the R package smacof). It indicates the final stress-1 value. A value very close to 0 corresponds to a perfect fit."),
+			p("For both approaches, a 'rho' value is also given, which is the Spearman's correlation coefficient between real dissimilarities (i.e., MMD values) and distances observed on the MDS plot: cf. G. Dzemyda, O. Kurasova, and J. Zilinskas (2013),",
+			span(em("Multidimensional Data Visualization,")),
+			"Springer, chap. 2, p. 39-40. A value very close to 1 indicates a perfect fit."),
+			easyClose=TRUE,
+			size="l"
+		))
+	})
+	
+	observeEvent(input$selectGroups, # mise à jour de la dimension max admissible pour les MDS en fonction du nb de groupes retenus :
+		updateNumericInput(session, "MDSdim", min=2, max=ifelse(length(input$selectGroups)>3,3,2)) 
+	)
+	
 	output$plotMDS <- renderPlot({
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>2) { # si un jeu de donnees valide a bien ete fourni et qu'on a au moins 3 groupes !
-						gphMDS(mmdval=resultatsMMD()$MMDSym, methodMDS=input$methodMDS, displayAxes=input$axesMDSplot, displayStress=input$checkboxStress)
+						gphMDS(mmdval=resultatsMMD()$MMDSym, methodMDS=input$methodMDS, displayAxes=input$axesMDSplot, displayGOF=input$checkboxGOFstats, dim=input$MDSdim, asp=input$aspMDSplot)
 					} else { # sinon, s'il n'y a pas de donnees ou qu'elles sont non-valides,
 						return() # on n'affiche rien pour l'instant.
 					}
@@ -230,7 +255,7 @@ shinyServer(function(input, output, session) {
 	output$download_plotMDS <- downloadHandler(filename='MDS_plot.png', content=function(file) { # la fonction declenchee par le bouton de telechargement
 					png(file, width=800, height=800)
 						par(cex=1.16)
-						gphMDS(mmdval=resultatsMMD()$MMDSym, methodMDS=input$methodMDS, displayAxes=input$axesMDSplot, displayStress=input$checkboxStress)
+						gphMDS(mmdval=resultatsMMD()$MMDSym, methodMDS=input$methodMDS, displayAxes=input$axesMDSplot, displayGOF=input$checkboxGOFstats, dim=input$MDSdim, asp=input$aspMDSplot)
 					dev.off()
 	})
 	

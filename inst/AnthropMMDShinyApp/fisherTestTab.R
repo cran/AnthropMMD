@@ -1,7 +1,7 @@
 fisherTestTab <- function(tab) {
-# tab : table de format 'table'
-# cette fonction teste si chaque trait presente une difference significative pour au moins deux des groupes etudies (Harris & Sjovold 2004).
-# retourne le tableau reduit aux seules variables presentant au moins une difference significative
+# tab : données d'entrée, préalablement converties au format 'table' dans server.R
+# Cette fonction teste si chaque trait presente une différence significative (au test exact de Fisher) pour au moins deux des groupes étudiés (Harris & Sjovold, 2004).
+# output -> liste comporant : le dataframe réduit aux seules variables présentant au moins une différence significative ; et une matrice de p-valeurs pour chaque paire de groupes et chaque trait.
 
 	nbGroupes <- nrow(tab)/2 # le nombre de groupes
 	nbVars <- ncol(tab) # le nombre de variables

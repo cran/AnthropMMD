@@ -7,6 +7,30 @@ shinyUI(fluidPage(theme="kappa.css",
 		.irs-bar-edge {background: #0098B6;}
 		.irs-single {color:white; background:#0098B6; font-weight: bold;}
  	"),
+ 	tags$style(HTML("
+		.btn-help.btn {
+			display: inline-block;
+			padding: 7px 12px;
+			font-size: 1em;
+			margin: 0 0 0 0;
+			vertical-align: middle;
+			color: gray;
+			font-weight: bold;
+			background-color: white;
+			border-color: gray;
+		}
+		.btn-help.btn:hover {
+			color: white;
+			background-color: #0098B6;
+		}
+		.btn-help.active {
+			color: white;
+			background-color: #0098B6;
+			border-color: #0098B6;
+		}
+		"
+	)),
+	
 	sidebarLayout(
 		#############################################################
 		# I] Le menu de gauche, présentant les options de l'analyse :
@@ -115,12 +139,19 @@ shinyUI(fluidPage(theme="kappa.css",
 				), 
 				# 3. L'onglet d'affichage de l'éventuel graphique MDS :
 				tabPanel("MDS plot", 
-					helpText("A multidimensional scaling plot (MDS) is displayed below if and only if there are at least three active groups."),
+					helpText("A 2D multidimensional scaling plot (MDS) can be displayed below if and only if there are at least three active groups. For a 3D MDS plot, at least four groups are needed, and the first three eigenvalue found during the MDS calculation must be positive (so that you will not necessarily get a 3D plot even if you allow the maximum dimension of the space to be 3)."),
 					br(),
-					selectInput("methodMDS", label="MDS method", choices=list("Classical metric MDS (a.k.a. PCoA)"="MMDS", "SMACOF, interval type"="interval", "SMACOF, ratio type"="ratio", "SMACOF, ordinal (nonmetric) MDS"="ordinal"), selected="MMDS", multiple=FALSE),
-					checkboxInput("axesMDSplot", label="Display axes on the MDS plot", value=FALSE),
-					conditionalPanel(condition="input.methodMDS != 'MMDS'",
-						checkboxInput("checkboxStress", label="Display Stress-1 value on the MDS plot (SMACOF methods only)", value=FALSE)
+					fluidRow(
+						column(6,
+							numericInput("MDSdim", label="Maximum dimension of the space", value=2, step=1, min=2, max=3),
+							selectInput("methodMDS", label="MDS method", choices=list("Classical metric MDS (a.k.a. PCoA)"="MMDS", "SMACOF, interval type"="interval", "SMACOF, ratio type"="ratio", "SMACOF, ordinal (nonmetric) MDS"="ordinal"), selected="MMDS", multiple=FALSE)
+						),
+						column(6,
+							strong("Graph options"),
+							checkboxInput("aspMDSplot", label="Make all axes use the same scale", value=TRUE),
+							checkboxInput("axesMDSplot", label="Display axes on the MDS plot", value=TRUE),
+							p(checkboxInput("checkboxGOFstats", label="Display goodness of fit statistics on the MDS plot", value=FALSE), actionButton("helpMDS", label="Help", class="btn-help"))
+						)
 					),
 					br(),
 					plotOutput("plotMDS", width="80%"),

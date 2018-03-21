@@ -1,9 +1,9 @@
 selectVars <- function(tab, k=10, excludeTraits, OMDvalue=NULL, groups, formule) {
- # tab : tableau de type "table"
- # k : nombre minimal d'individus par groupes pour que le caract\`ere soit retenu dans le calcul du MMD.
- # excludeTraits : a choisir parmi "none", "excludeNPT", "excludeQNPT", "excludeNCT" : definit la strategie (eventuelle) d'exclusion automatique de traits insuffisamment polymorphiques
- # groups : un facteur ou un vecteur de caracteres, indiquant les groupes a retenir pour l'analyse.
- # formule : a choisir parmi "Anscombe" ou "Freeman", formule de calcul pour les mesures individuelles de divergence
+# tab : tableau de type "table"
+# k : scalaire, nombre minimal d'individus par groupes pour que le caractère soit retenu dans le calcul du MMD.
+# excludeTraits : chaîne importée depuis l'UI ("none", "excludeNPT", "excludeQNPT", ou "excludeNCT") : définit la strategie (éventuelle) d'exclusion automatique de traits insuffisamment polymorphiques
+# groups : un facteur ou un vecteur de caractères, indiquant les groupes à retenir pour l'analyse.
+# formule : chaîne importée depuis l'UI ("Anscombe" ou "Freeman"), formule de calcul pour les mesures individuelles de divergence
  
  	################################
  	# 0. Filtrer selon les groupes :
@@ -64,7 +64,10 @@ selectVars <- function(tab, k=10, excludeTraits, OMDvalue=NULL, groups, formule)
 		tabDisplay <- IMDs$Sorted
 	}
 	
+	##############################
+	# 3. Retourner les résultats :
 	tabDisplay <- as.matrix(tabDisplay)
 	colnames(tabDisplay) <- "Overall MD"
 	return(list("TableCalcMMD"=tab, "TableDisplayIMD"=tabDisplay))
+	
 }

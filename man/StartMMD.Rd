@@ -37,7 +37,7 @@ For both data types, column names are strongly recommended for better interpreta
 These four options are designed to avoid negative MMD values.
 \item Some groups/populations can be manually excluded from the analysis. This may be useful if very few individuals belonging to a given population could be recorded for the variables retained by the criteria described above.
 
-\item A MDS plot and a hierarchical clustering, done using MMD dissimilarities as inputs, are displayed in the last two tabs. As MMD can sometimes be negative, those negatives values are replaced by zeros, so that the MMD matrix can be seen as a symmetrical distance matrix. Please note that the classical metric MDS cannot be displayed if there is only one positive eigenvalue, and that a non-metric MDS plot can be displayed only if all MMD values are strictly positive. Several MDS options are proposed, cf. the help page of the \sQuote{smacofSym} function from the R package \sQuote{smacof} for detailed technical information.
+\item A MDS plot and a hierarchical clustering, done using MMD dissimilarities as inputs, are displayed in the last two tabs. As MMD can sometimes be negative, those negatives values are replaced by zeros, so that the MMD matrix can be seen as a symmetrical distance matrix. Please note that the classical two-dimensional metric MDS plot cannot be displayed if there is only one positive eigenvalue. Several MDS options are proposed, cf. the help page of the \sQuote{smacofSym} function from the R package \sQuote{smacof} for detailed technical information.
 }
 }
 \value{
