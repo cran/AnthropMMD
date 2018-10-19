@@ -1,19 +1,24 @@
 \name{StartMMD}
 \alias{StartMMD}
+
 \title{
 An R-Shiny application for the mean measure of divergence
 }
+
 \description{
 Launches a graphical user interface (GUI) for the calculation of the mean measure of divergence.
 }
+
 \usage{
 StartMMD()
 }
+
 \note{
 The R console is not available when the GUI is active. To exit the GUI, type Echap (on MS Windows systems) or Ctrl+C (on Linux systems) in the R console.
 
 On 14-inch (or smaller) screens, for convenience, it may be necessary to decrease the zoom level of your web browser and/or to turn on fullscreen mode.
 }
+
 \details{
 The GUI of AnthropMMD is completely autonomous: reading the data file and specifying the parameters of the analysis are done through the interface. Once the dataset is loaded, the output reacts dynamically to any change in the analysis settings. 
 
@@ -40,15 +45,16 @@ These four options are designed to avoid negative MMD values.
 \item A MDS plot and a hierarchical clustering, done using MMD dissimilarities as inputs, are displayed in the last two tabs. As MMD can sometimes be negative, those negatives values are replaced by zeros, so that the MMD matrix can be seen as a symmetrical distance matrix. Please note that the classical two-dimensional metric MDS plot cannot be displayed if there is only one positive eigenvalue. Several MDS options are proposed, cf. the help page of the \sQuote{smacofSym} function from the R package \sQuote{smacof} for detailed technical information.
 }
 }
+
 \value{
 The function returns no value by itself, but all results can be individually downloaded through the graphical interface.
-
 \itemize{
 \item The \sQuote{true} MMD values (i.e., which can be negative in the case of small samples with similar traits frequencies, cf. Irish 2010) and their standard deviations are presented in the matrix labelled \sQuote{MMD values (upper triangular part) and associated SD values (lower triangular part)}.
 \item A MMD value can be considered as significant if it is greater than twice its standard deviation. Significance is assessed in another ad-hoc table of results.
 \item The negative MMD values, if any, are replaced by zeros in the \sQuote{Symmetrical matrix of MMD values}.
 }
 }
+
 \references{
 Harris, E. F. and Sjøvold, T. (2004) Calculation of Smith's mean measure of divergence for intergroup comparisons using nonmetric data. \emph{Dental Anthropology}, \bold{17}(3), 83--93.
 
@@ -58,9 +64,11 @@ Nikita, E. (2015) A critical review of the mean measure of divergence and Mahala
 
 Santos, F. (2018) AnthropMMD: an R package with a graphical user interface for the mean measure of divergence. \emph{American Journal of Physical Anthropology}, \bold{165}(1), 200--205. doi: 10.1002/ajpa.23336
 }
+
 \author{
-Frédéric Santos, <frederic.santos@u-bordeaux.fr>
+Frédéric Santos, \email{frederic.santos@u-bordeaux.fr}
 }
+
 \examples{
 \dontrun{ StartMMD()}
 }

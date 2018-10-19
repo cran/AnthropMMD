@@ -2,25 +2,29 @@
 \alias{AnthropMMD-package}
 \alias{AnthropMMD}
 \docType{package}
+
 \title{
 An R-Shiny Application for Smith's Mean Measure of Divergence (MMD)
 }
+
 \description{
 Offers a graphical user interface for the calculation of the mean measure of divergence, with facilities for trait selection and graphical representations.
 }
+
 \details{
 \tabular{ll}{
 Package: \tab AnthropMMD\cr
 Type: \tab Package\cr
-Version: \tab 2.5.0\cr
-Date: \tab 2018-03-21\cr
+Version: \tab 2.5.1\cr
+Date: \tab 2018-10-19\cr
 License: \tab GPL >=2\cr
 }
+}
 
-}
 \author{
-Frédéric Santos, <frederic.santos@u-bordeaux.fr>
+Frédéric Santos, \email{frederic.santos@u-bordeaux.fr}
 }
+
 \references{
 Harris, E. F. and Sjøvold, T. (2004) Calculation of Smith's mean measure of divergence for intergroup comparisons using nonmetric data. \emph{Dental Anthropology}, \bold{17}(3), 83--93.
 
@@ -30,7 +34,9 @@ Nikita, E. (2015) A critical review of the mean measure of divergence and Mahala
 
 Santos, F. (2018) AnthropMMD: an R package with a graphical user interface for the mean measure of divergence. \emph{American Journal of Physical Anthropology}, \bold{165}(1), 200--205. doi: 10.1002/ajpa.23336
 }
+
 \keyword{MMD, mean measure of divergence, nonmetric traits}
+
 \examples{
 \dontrun{ StartMMD() }
 }

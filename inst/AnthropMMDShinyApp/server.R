@@ -58,7 +58,13 @@ shinyServer(function(input, output, session) {
 	
 	dat <- reactive({ # ici, on insère une expression qui retournera en temps réel le jeu de données correspondant aux choix de filtrage de l'utilisateur
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) { # si un jeu de données a bien été fourni et qu'il est valide !
-						selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits=as.character(input$exclusionStrategy), groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD), OMDvalue=input$OMDvalue)
+						datRed <- selectVars(get("dat", envir=myenvg), k=as.numeric(input$minNbInd), excludeTraits=as.character(input$exclusionStrategy), groups=as.character(input$selectGroups), formule=as.character(input$formuleMMD), OMDvalue=input$OMDvalue)
+						if (ncol(as.data.frame(datRed$TableCalcMMD))>=2) {
+							return(datRed)
+						} else {
+							showModal(modalDialog(title="Error", "With the current settings for trait selection, there is less than two traits suitable for the analysis. Consequently, the MMD will not be calculated.", easyClose=TRUE))
+							return()
+						}
 					} else { # sinon, s'il n'y a pas de données ou qu'elles sont non-valides,
 						return() # on n'affiche rien pour l'instant (évite l'affichage d'erreurs en rouge ou de "résultats vides" en l'absence de fichier correct)
 					}
@@ -66,9 +72,11 @@ shinyServer(function(input, output, session) {
 	
 	resultatsMMD <- reactive({ # meme chose avec les resultats des MMD sur le jeu de donnes obtenu ci-dessus
 					if (input$loadData>0 & exists("dat", envir=myenvg) & length(input$selectGroups)>1) { # si un jeu de donnees a bien ete fourni et qu'il est valide !
-						if (ncol(dat()$TableCalcMMD) > 0) { # et s'il reste encore des variables avec les criteres de selection definis !
+						if (ncol(dat()$TableCalcMMD) > 1) { # et s'il reste encore des variables avec les criteres de selection definis !
 							calcMMD(dat()$TableCalcMMD, formule=input$formuleMMD)
-						} else { return() }
+						} else { 
+							return() 
+						}
 					} else {
 						return()
 					}
@@ -88,7 +96,7 @@ shinyServer(function(input, output, session) {
 					} else { # sinon, par défaut,
 						return(100) # la valeur maximale est fixée à 100.
 					}
-			})	
+			})
 	
 	output$regletteNbMinInd <- renderUI({
 		sliderInput("minNbInd", label="Only retain the traits with this minimal number of individuals per group", value=min(c(10,calcNbMaxReglette())), min=1, max=calcNbMaxReglette())
