@@ -4,7 +4,7 @@ validDataMMD <- function(tab, type) {
 # vérifie si le dataframe "tab", du type "type" (raw ou table) est bien valide pour AnthropMMD
 # output -> booléen
  
- if (ncol(tab) <= 1) { # quel que soit son type, le fichier est invalide s'il n'a qu'une seule colonne (l'utilisateur s'est sans doute trompé de separateur de champ) 
+ if (ncol(tab) <= 1) { # quel que soit son type, le fichier est invalide s'il n'a qu'une seule colonne (l'utilisateur s'est sans doute trompé de séparateur de champ) 
  	return(FALSE)
  } else {
  
@@ -33,7 +33,7 @@ validDataMMD <- function(tab, type) {
 		
 	} else if (type=="table") { 
 		nb_grps <- nrow(tab)/2 # le nombre de groupes
-		noms <- rownames(tab)[1:nb_grps] # theoriquement de la forme N_Group1, N_Group2, ...
+		noms <- rownames(tab)[1:nb_grps] # théoriquement de la forme N_Group1, N_Group2, ...
 		if (all(substr(noms,1,2) == "N_") & all(apply(tab, MARGIN=2, FUN=mode)=="numeric")) {
 			return(TRUE)
 		} else {
