@@ -1,6 +1,9 @@
-748b8b925a75fabc6a5710ad0cbc9339 *DESCRIPTION
+1e6c5301089bd1292a0024234c584043 *DESCRIPTION
+2c1195e933db0b2b1c33b49f38754ed5 *LICENSE
 f89d32c38fea4bb93ee59eba072e72b7 *NAMESPACE
+e71bd3f2eb3281fd4d3bd9fee3f174a2 *NEWS.md
 cf78137ae0df5617fcfeb823304e469c *R/StartMMD.R
+9ef7a48f3b91b381d40210238116f650 *README.md
 0c275bfb201bd24509094e156b9b455a *inst/AnthropMMDShinyApp/calcIMD.R
 a2cc96f641c42163619da0ad8fa38b64 *inst/AnthropMMDShinyApp/calcMMD.R
 3608ea245933386822bc9071760f787d *inst/AnthropMMDShinyApp/extractGroups.R
@@ -11,9 +14,9 @@ a2cc96f641c42163619da0ad8fa38b64 *inst/AnthropMMDShinyApp/calcMMD.R
 c7b6167247323758210a903f2a0e1e8d *inst/AnthropMMDShinyApp/selectVars.R
 fa4f4ff394ba7b4936b042e26c58cfe8 *inst/AnthropMMDShinyApp/server.R
 7a1d1ee37044896239eb073ab180d974 *inst/AnthropMMDShinyApp/tableToFreq.R
-6d666f0d320151c2c50e18233986d3f1 *inst/AnthropMMDShinyApp/ui.R
+6cd3b160ea5cc38bd0d2c4e818396d59 *inst/AnthropMMDShinyApp/ui.R
 3646d44bc7fff28548d8f3b8b1507f4e *inst/AnthropMMDShinyApp/validDataMMD.R
 b5adcb5e9bc86d9411d5c30ceb84392d *inst/AnthropMMDShinyApp/www/kappa.css
 1ef5f87ae9db010d83caac4cf2dba85d *inst/CITATION
-ef4d3f0b35e9ab4954bf7266d96faa3f *man/AnthropMMD-package.Rd
+e36214333a157b001652058c05a836ef *man/AnthropMMD-package.Rd
 6a19ecc8e600a3290241b9f86a9e43f4 *man/StartMMD.Rd

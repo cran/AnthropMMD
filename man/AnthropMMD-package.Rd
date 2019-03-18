@@ -15,9 +15,9 @@ Offers a graphical user interface for the calculation of the mean measure of div
 \tabular{ll}{
 Package: \tab AnthropMMD\cr
 Type: \tab Package\cr
-Version: \tab 2.5.2\cr
-Date: \tab 2018-10-29\cr
-License: \tab GPL >=2\cr
+Version: \tab 2.5.3\cr
+Date: \tab 2019-03-18\cr
+License: \tab GPL-3\cr
 }
 }
 
