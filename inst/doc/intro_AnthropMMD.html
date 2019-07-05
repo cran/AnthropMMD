@@ -1,0 +1,532 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+<meta name="viewport" content="width=device-width, initial-scale=1">
+
+<meta name="author" content="Frédéric Santos, &lt;frederic.santos[at]u-bordeaux.fr&gt;" />
+
+
+<title>An overview of AnthropMMD</title>
+
+
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css" data-origin="pandoc">
+a.sourceLine { display: inline-block; line-height: 1.25; }
+a.sourceLine { pointer-events: none; color: inherit; text-decoration: inherit; }
+a.sourceLine:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode { white-space: pre; position: relative; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+code.sourceCode { white-space: pre-wrap; }
+a.sourceLine { text-indent: -1em; padding-left: 1em; }
+}
+pre.numberSource a.sourceLine
+  { position: relative; left: -4em; }
+pre.numberSource a.sourceLine::before
+  { content: attr(title);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; pointer-events: all; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  }
+@media screen {
+a.sourceLine::before { text-decoration: underline; }
+}
+code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #7d9029; } /* Attribute */
+code span.bn { color: #40a070; } /* BaseN */
+code span.bu { } /* BuiltIn */
+code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4070a0; } /* Char */
+code span.cn { color: #880000; } /* Constant */
+code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+code span.dt { color: #902000; } /* DataType */
+code span.dv { color: #40a070; } /* DecVal */
+code span.er { color: #ff0000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #40a070; } /* Float */
+code span.fu { color: #06287e; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+code span.op { color: #666666; } /* Operator */
+code span.ot { color: #007020; } /* Other */
+code span.pp { color: #bc7a00; } /* Preprocessor */
+code span.sc { color: #4070a0; } /* SpecialChar */
+code span.ss { color: #bb6688; } /* SpecialString */
+code span.st { color: #4070a0; } /* String */
+code span.va { color: #19177c; } /* Variable */
+code span.vs { color: #4070a0; } /* VerbatimString */
+code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' || rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+<style type="text/css">body {
+background-color: #fff;
+margin: 1em auto;
+max-width: 700px;
+overflow: visible;
+padding-left: 2em;
+padding-right: 2em;
+font-family: "Open Sans", "Helvetica Neue", Helvetica, Arial, sans-serif;
+font-size: 14px;
+line-height: 1.35;
+}
+#header {
+text-align: center;
+}
+#TOC {
+clear: both;
+margin: 0 0 10px 10px;
+padding: 4px;
+width: 400px;
+border: 1px solid #CCCCCC;
+border-radius: 5px;
+background-color: #f6f6f6;
+font-size: 13px;
+line-height: 1.3;
+}
+#TOC .toctitle {
+font-weight: bold;
+font-size: 15px;
+margin-left: 5px;
+}
+#TOC ul {
+padding-left: 40px;
+margin-left: -1.5em;
+margin-top: 5px;
+margin-bottom: 5px;
+}
+#TOC ul ul {
+margin-left: -2em;
+}
+#TOC li {
+line-height: 16px;
+}
+table {
+margin: 1em auto;
+border-width: 1px;
+border-color: #DDDDDD;
+border-style: outset;
+border-collapse: collapse;
+}
+table th {
+border-width: 2px;
+padding: 5px;
+border-style: inset;
+}
+table td {
+border-width: 1px;
+border-style: inset;
+line-height: 18px;
+padding: 5px 5px;
+}
+table, table th, table td {
+border-left-style: none;
+border-right-style: none;
+}
+table thead, table tr.even {
+background-color: #f7f7f7;
+}
+p {
+margin: 0.5em 0;
+}
+blockquote {
+background-color: #f6f6f6;
+padding: 0.25em 0.75em;
+}
+hr {
+border-style: solid;
+border: none;
+border-top: 1px solid #777;
+margin: 28px 0;
+}
+dl {
+margin-left: 0;
+}
+dl dd {
+margin-bottom: 13px;
+margin-left: 13px;
+}
+dl dt {
+font-weight: bold;
+}
+ul {
+margin-top: 0;
+}
+ul li {
+list-style: circle outside;
+}
+ul ul {
+margin-bottom: 0;
+}
+pre, code {
+background-color: #f7f7f7;
+border-radius: 3px;
+color: #333;
+white-space: pre-wrap; 
+}
+pre {
+border-radius: 3px;
+margin: 5px 0px 10px 0px;
+padding: 10px;
+}
+pre:not([class]) {
+background-color: #f7f7f7;
+}
+code {
+font-family: Consolas, Monaco, 'Courier New', monospace;
+font-size: 85%;
+}
+p > code, li > code {
+padding: 2px 0px;
+}
+div.figure {
+text-align: center;
+}
+img {
+background-color: #FFFFFF;
+padding: 2px;
+border: 1px solid #DDDDDD;
+border-radius: 3px;
+border: 1px solid #CCCCCC;
+margin: 0 5px;
+}
+h1 {
+margin-top: 0;
+font-size: 35px;
+line-height: 40px;
+}
+h2 {
+border-bottom: 4px solid #f7f7f7;
+padding-top: 10px;
+padding-bottom: 2px;
+font-size: 145%;
+}
+h3 {
+border-bottom: 2px solid #f7f7f7;
+padding-top: 10px;
+font-size: 120%;
+}
+h4 {
+border-bottom: 1px solid #f7f7f7;
+margin-left: 8px;
+font-size: 105%;
+}
+h5, h6 {
+border-bottom: 1px solid #ccc;
+font-size: 105%;
+}
+a {
+color: #0033dd;
+text-decoration: none;
+}
+a:hover {
+color: #6666ff; }
+a:visited {
+color: #800080; }
+a:visited:hover {
+color: #BB00BB; }
+a[href^="http:"] {
+text-decoration: underline; }
+a[href^="https:"] {
+text-decoration: underline; }
+
+code > span.kw { color: #555; font-weight: bold; } 
+code > span.dt { color: #902000; } 
+code > span.dv { color: #40a070; } 
+code > span.bn { color: #d14; } 
+code > span.fl { color: #d14; } 
+code > span.ch { color: #d14; } 
+code > span.st { color: #d14; } 
+code > span.co { color: #888888; font-style: italic; } 
+code > span.ot { color: #007020; } 
+code > span.al { color: #ff0000; font-weight: bold; } 
+code > span.fu { color: #900; font-weight: bold; }  code > span.er { color: #a61717; background-color: #e3d2d2; } 
+</style>
+
+
+
+
+</head>
+
+<body>
+
+
+
+
+<h1 class="title toc-ignore">An overview of AnthropMMD</h1>
+<h4 class="author">Frédéric Santos, &lt;frederic.santos[at]u-bordeaux.fr&gt;</h4>
+
+
+<div id="TOC">
+<ul>
+<li><a href="#graphical-user-interface"><span class="toc-section-number">1</span> Graphical user interface</a></li>
+<li><a href="#using-anthropmmd-from-the-command-line"><span class="toc-section-number">2</span> Using <code>AnthropMMD</code> from the command line</a><ul>
+<li><a href="#data-formatting"><span class="toc-section-number">2.1</span> Data formatting</a><ul>
+<li><a href="#raw-binary-data"><span class="toc-section-number">2.1.1</span> Raw binary data</a></li>
+<li><a href="#tables-of-sample-sizes-and-absolute-frequencies"><span class="toc-section-number">2.1.2</span> Tables of sample sizes and absolute frequencies</a></li>
+<li><a href="#important-remark"><span class="toc-section-number">2.1.3</span> Important remark</a></li>
+</ul></li>
+<li><a href="#trait-selection"><span class="toc-section-number">2.2</span> Trait selection</a></li>
+<li><a href="#compute-to-mean-measure-of-divergence"><span class="toc-section-number">2.3</span> Compute to Mean Measure of Divergence</a></li>
+<li><a href="#graphical-representations-of-mmd"><span class="toc-section-number">2.4</span> Graphical representations of MMD</a><ul>
+<li><a href="#multidimensional-scaling"><span class="toc-section-number">2.4.1</span> Multidimensional scaling</a></li>
+<li><a href="#hierarchical-clustering"><span class="toc-section-number">2.4.2</span> Hierarchical clustering</a></li>
+</ul></li>
+</ul></li>
+<li><a href="#references">References</a></li>
+</ul>
+</div>
+
+<div id="graphical-user-interface" class="section level1">
+<h1><span class="header-section-number">1</span> Graphical user interface</h1>
+<p><code>AnthropMMD</code> was primarily designed as an R-Shiny application <span class="citation">(Santos 2018)</span>, that can be launched with the following instruction:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb1-1" title="1">AnthropMMD<span class="op">::</span><span class="kw">start_mmd</span>()</a></code></pre></div>
+<p>Starting with the version 3.0.0, it can also be used from the command line, to make it convenient in a context of reproducible research.</p>
+</div>
+<div id="using-anthropmmd-from-the-command-line" class="section level1">
+<h1><span class="header-section-number">2</span> Using <code>AnthropMMD</code> from the command line</h1>
+<div id="data-formatting" class="section level2">
+<h2><span class="header-section-number">2.1</span> Data formatting</h2>
+<p>The MMD is a dissimilarity measure among groups of individuals described by binary (presence-absence) traits <span class="citation">(Sjøvold 1973, 1977; Harris and Sjøvold 2004)</span>. The MMD formula only requires to know the sample sizes and relative trait frequencies within each group: providing the raw individual data is not mandatory.</p>
+<p>Usually, the user will have recorded the data in one of the the two following formats.</p>
+<div id="raw-binary-data" class="section level3">
+<h3><span class="header-section-number">2.1.1</span> Raw binary data</h3>
+<p>Most of the time, the data will be formatted as a classical dataframe with <span class="math inline">\(n\)</span> rows (one per individual) and <span class="math inline">\(p+1\)</span> columns (the first column must be a group indicator; the <span class="math inline">\(p\)</span> other columns correspond to the <span class="math inline">\(p\)</span> binary traits observed). Each trait has two possible values: <span class="math inline">\(1\)</span> if present, <span class="math inline">\(0\)</span> if absent (missing values are allowed). Rownames are optional but colnames (i.e., <code>header</code>s) are mandatory.</p>
+<p>An artifical dataset, <code>toyMMD</code>, is available in the package:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb2-1" title="1"><span class="kw">data</span>(toyMMD)</a>
+<a class="sourceLine" id="cb2-2" title="2"><span class="kw">head</span>(toyMMD)</a>
+<a class="sourceLine" id="cb2-3" title="3"><span class="co">#&gt;      Group Trait1 Trait2 Trait3 Trait4 Trait5 Trait6 Trait7 Trait8 Trait9</span></a>
+<a class="sourceLine" id="cb2-4" title="4"><span class="co">#&gt; A_1 GroupA      1     NA      1      1     NA      0     NA      1      0</span></a>
+<a class="sourceLine" id="cb2-5" title="5"><span class="co">#&gt; A_2 GroupA     NA     NA      1     NA     NA     NA     NA     NA      1</span></a>
+<a class="sourceLine" id="cb2-6" title="6"><span class="co">#&gt; A_3 GroupA     NA      1      1      0      0      1      0      1     NA</span></a>
+<a class="sourceLine" id="cb2-7" title="7"><span class="co">#&gt; A_4 GroupA      1      1      0      0      0     NA      1      1      0</span></a>
+<a class="sourceLine" id="cb2-8" title="8"><span class="co">#&gt; A_5 GroupA      1      1      1      1     NA      0      1     NA      1</span></a>
+<a class="sourceLine" id="cb2-9" title="9"><span class="co">#&gt; A_6 GroupA     NA      1      0      0     NA      1      0     NA      1</span></a></code></pre></div>
+<p>It is not necessary for the <code>Trait</code>s to be manually converted as factors. <code>toyMMD</code> includes nine traits with many missing values, and the individuals belong to five groups:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb3-1" title="1"><span class="kw">str</span>(toyMMD)</a>
+<a class="sourceLine" id="cb3-2" title="2"><span class="co">#&gt; &#39;data.frame&#39;:    200 obs. of  10 variables:</span></a>
+<a class="sourceLine" id="cb3-3" title="3"><span class="co">#&gt;  $ Group : Factor w/ 5 levels &quot;GroupA&quot;,&quot;GroupB&quot;,..: 1 1 1 1 1 1 1 1 1 1 ...</span></a>
+<a class="sourceLine" id="cb3-4" title="4"><span class="co">#&gt;  $ Trait1: int  1 NA NA 1 1 NA 1 NA NA NA ...</span></a>
+<a class="sourceLine" id="cb3-5" title="5"><span class="co">#&gt;  $ Trait2: int  NA NA 1 1 1 1 NA 1 NA 1 ...</span></a>
+<a class="sourceLine" id="cb3-6" title="6"><span class="co">#&gt;  $ Trait3: int  1 1 1 0 1 0 1 0 1 NA ...</span></a>
+<a class="sourceLine" id="cb3-7" title="7"><span class="co">#&gt;  $ Trait4: int  1 NA 0 0 1 0 1 1 1 0 ...</span></a>
+<a class="sourceLine" id="cb3-8" title="8"><span class="co">#&gt;  $ Trait5: int  NA NA 0 0 NA NA NA 0 0 NA ...</span></a>
+<a class="sourceLine" id="cb3-9" title="9"><span class="co">#&gt;  $ Trait6: int  0 NA 1 NA 0 1 NA NA 1 NA ...</span></a>
+<a class="sourceLine" id="cb3-10" title="10"><span class="co">#&gt;  $ Trait7: int  NA NA 0 1 1 0 NA NA NA 0 ...</span></a>
+<a class="sourceLine" id="cb3-11" title="11"><span class="co">#&gt;  $ Trait8: int  1 NA 1 1 NA NA NA NA 1 NA ...</span></a>
+<a class="sourceLine" id="cb3-12" title="12"><span class="co">#&gt;  $ Trait9: int  0 1 NA 0 1 1 NA 0 NA NA ...</span></a></code></pre></div>
+<p>If the data were recorded as a raw binary dataset, they <strong>must</strong> be converted into a table of relative frequencies prior to the MMD analysis. The R function <code>binary_to_table</code> with the argument <code>relative = TRUE</code> can perform this operation:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb4-1" title="1">tab &lt;-<span class="st"> </span><span class="kw">binary_to_table</span>(toyMMD, <span class="dt">relative =</span> <span class="ot">TRUE</span>)</a>
+<a class="sourceLine" id="cb4-2" title="2">tab</a>
+<a class="sourceLine" id="cb4-3" title="3"><span class="co">#&gt;             Trait1 Trait2 Trait3 Trait4 Trait5 Trait6 Trait7 Trait8 Trait9</span></a>
+<a class="sourceLine" id="cb4-4" title="4"><span class="co">#&gt; N_GroupA    10.000 22.000 36.000 39.000 20.000 23.000 19.000 10.000 19.000</span></a>
+<a class="sourceLine" id="cb4-5" title="5"><span class="co">#&gt; N_GroupB     8.000 21.000 21.000 20.000 19.000 17.000 17.000 13.000 20.000</span></a>
+<a class="sourceLine" id="cb4-6" title="6"><span class="co">#&gt; N_GroupC    27.000 18.000 27.000 25.000 19.000 26.000 31.000 17.000 36.000</span></a>
+<a class="sourceLine" id="cb4-7" title="7"><span class="co">#&gt; N_GroupD    15.000 35.000 30.000 39.000 29.000 30.000 35.000 14.000 19.000</span></a>
+<a class="sourceLine" id="cb4-8" title="8"><span class="co">#&gt; N_GroupE    15.000 21.000 21.000 24.000 22.000 20.000 22.000 11.000 38.000</span></a>
+<a class="sourceLine" id="cb4-9" title="9"><span class="co">#&gt; Freq_GroupA  0.800  0.727  0.806  0.615  0.000  0.652  0.316  0.800  0.526</span></a>
+<a class="sourceLine" id="cb4-10" title="10"><span class="co">#&gt; Freq_GroupB  0.875  0.571  0.952  0.600  0.000  0.882  1.000  0.692  0.500</span></a>
+<a class="sourceLine" id="cb4-11" title="11"><span class="co">#&gt; Freq_GroupC  0.630  0.611  0.593  0.560  0.000  0.538  0.645  0.588  0.750</span></a>
+<a class="sourceLine" id="cb4-12" title="12"><span class="co">#&gt; Freq_GroupD  0.333  0.886  0.633  0.359  0.069  0.400  0.857  0.429  0.579</span></a>
+<a class="sourceLine" id="cb4-13" title="13"><span class="co">#&gt; Freq_GroupE  0.467  0.571  0.714  0.625  0.000  0.800  0.500  0.364  0.447</span></a></code></pre></div>
+</div>
+<div id="tables-of-sample-sizes-and-absolute-frequencies" class="section level3">
+<h3><span class="header-section-number">2.1.2</span> Tables of sample sizes and absolute frequencies</h3>
+<p>Sometimes, in particular if the data were extracted from research articles rather than true exprimentation, the user will only know the sample sizes and absolute trait frequencies in each group. As previously stated, those data are perfectly sufficient to compute MMD values. Here is an example of such a table:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb5-1" title="1"><span class="kw">data</span>(absolute_freqs)</a>
+<a class="sourceLine" id="cb5-2" title="2">absolute_freqs</a>
+<a class="sourceLine" id="cb5-3" title="3"><span class="co">#&gt;             Trait1 Trait2 Trait3 Trait4 Trait5 Trait6 Trait7 Trait8 Trait9</span></a>
+<a class="sourceLine" id="cb5-4" title="4"><span class="co">#&gt; N_GroupA        10     22     36     39     20     23     19     10     19</span></a>
+<a class="sourceLine" id="cb5-5" title="5"><span class="co">#&gt; N_GroupB         8     21     21     20     19     17     17     13     20</span></a>
+<a class="sourceLine" id="cb5-6" title="6"><span class="co">#&gt; N_GroupC        27     18     27     25     19     26     31     17     36</span></a>
+<a class="sourceLine" id="cb5-7" title="7"><span class="co">#&gt; N_GroupD        15     35     30     39     29     30     35     14     19</span></a>
+<a class="sourceLine" id="cb5-8" title="8"><span class="co">#&gt; N_GroupE        15     21     21     24     22     20     22     11     38</span></a>
+<a class="sourceLine" id="cb5-9" title="9"><span class="co">#&gt; Freq_GroupA      8     16     29     24      0     15      6      8     10</span></a>
+<a class="sourceLine" id="cb5-10" title="10"><span class="co">#&gt; Freq_GroupB      7     12     20     12      0     15     17      9     10</span></a>
+<a class="sourceLine" id="cb5-11" title="11"><span class="co">#&gt; Freq_GroupC     17     11     16     14      0     14     20     10     27</span></a>
+<a class="sourceLine" id="cb5-12" title="12"><span class="co">#&gt; Freq_GroupD      5     31     19     14      2     12     30      6     11</span></a>
+<a class="sourceLine" id="cb5-13" title="13"><span class="co">#&gt; Freq_GroupE      7     12     15     15      0     16     11      4     17</span></a></code></pre></div>
+<p>If there are <span class="math inline">\(k\)</span> groups in the data, the first <span class="math inline">\(k\)</span> rows (whose names must start with an <code>N_</code> prefix, followed by the group labels) indicates the sample sizes of each trait in each group, and the last <span class="math inline">\(k\)</span> rows indicates the <em>absolute</em> trait frequencies. Such a table can be directly imported by the user, but <strong>must</strong> be converted to <em>relative</em> trait frequencies prior to the analysis, for instance by using the function <code>table_relfreq</code>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb6-1" title="1">tab &lt;-<span class="st"> </span><span class="kw">table_relfreq</span>(absolute_freqs)</a>
+<a class="sourceLine" id="cb6-2" title="2">tab</a>
+<a class="sourceLine" id="cb6-3" title="3"><span class="co">#&gt;             Trait1 Trait2 Trait3 Trait4 Trait5 Trait6 Trait7 Trait8 Trait9</span></a>
+<a class="sourceLine" id="cb6-4" title="4"><span class="co">#&gt; N_GroupA    10.000 22.000 36.000 39.000 20.000 23.000 19.000 10.000 19.000</span></a>
+<a class="sourceLine" id="cb6-5" title="5"><span class="co">#&gt; N_GroupB     8.000 21.000 21.000 20.000 19.000 17.000 17.000 13.000 20.000</span></a>
+<a class="sourceLine" id="cb6-6" title="6"><span class="co">#&gt; N_GroupC    27.000 18.000 27.000 25.000 19.000 26.000 31.000 17.000 36.000</span></a>
+<a class="sourceLine" id="cb6-7" title="7"><span class="co">#&gt; N_GroupD    15.000 35.000 30.000 39.000 29.000 30.000 35.000 14.000 19.000</span></a>
+<a class="sourceLine" id="cb6-8" title="8"><span class="co">#&gt; N_GroupE    15.000 21.000 21.000 24.000 22.000 20.000 22.000 11.000 38.000</span></a>
+<a class="sourceLine" id="cb6-9" title="9"><span class="co">#&gt; Freq_GroupA  0.800  0.727  0.806  0.615  0.000  0.652  0.316  0.800  0.526</span></a>
+<a class="sourceLine" id="cb6-10" title="10"><span class="co">#&gt; Freq_GroupB  0.875  0.571  0.952  0.600  0.000  0.882  1.000  0.692  0.500</span></a>
+<a class="sourceLine" id="cb6-11" title="11"><span class="co">#&gt; Freq_GroupC  0.630  0.611  0.593  0.560  0.000  0.538  0.645  0.588  0.750</span></a>
+<a class="sourceLine" id="cb6-12" title="12"><span class="co">#&gt; Freq_GroupD  0.333  0.886  0.633  0.359  0.069  0.400  0.857  0.429  0.579</span></a>
+<a class="sourceLine" id="cb6-13" title="13"><span class="co">#&gt; Freq_GroupE  0.467  0.571  0.714  0.625  0.000  0.800  0.500  0.364  0.447</span></a></code></pre></div>
+</div>
+<div id="important-remark" class="section level3">
+<h3><span class="header-section-number">2.1.3</span> Important remark</h3>
+<p>Due to rounding issues, it is clearly not advised for the user to submit directly a table of relative frequencies. If the absolute frequencies do not perfectly sum up to 1 for each trait, an error will be triggered.</p>
+<p>A table of relative frequencies is the starting point of all subsequent analyses, but it should be <em>computed</em> from the data loaded in R; it should not be loaded itself.</p>
+<p>A quick summary:</p>
+<ul>
+<li>if you load a raw binary dataframe, convert it to a table of relative frequencies with the function <code>binary_to_table(relative = TRUE)</code> as shown above;</li>
+<li>if you load a table of absolute frequencies, convert it to a table of relative frequencies with the function <code>table_relfreq</code>.</li>
+</ul>
+</div>
+</div>
+<div id="trait-selection" class="section level2">
+<h2><span class="header-section-number">2.2</span> Trait selection</h2>
+<p><code>AnthropMMD</code> proposes a built-in feature for trait selection, in order to discard the traits that could be observed on too few individuals, or that do not show enough variability among groups. The function <code>select_traits</code> allows such a selection according to several strategies <span class="citation">(Harris and Sjøvold 2004; Santos 2018)</span>.</p>
+<p>For instance, with the following instruction, we can discard the traits that could be observed on at least 10 individuals <em>per group</em>, and that exhibit no significant variability in frequencies among groups according to Fisher’s exact tests:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb7-1" title="1">tab_selected &lt;-<span class="st"> </span><span class="kw">select_traits</span>(tab, <span class="dt">k =</span> <span class="dv">10</span>, <span class="dt">strategy =</span> <span class="st">&quot;keepFisher&quot;</span>)</a>
+<a class="sourceLine" id="cb7-2" title="2">tab_selected<span class="op">$</span>filtered</a>
+<a class="sourceLine" id="cb7-3" title="3"><span class="co">#&gt;             Trait2 Trait3 Trait4 Trait6 Trait7 Trait9</span></a>
+<a class="sourceLine" id="cb7-4" title="4"><span class="co">#&gt; N_GroupA    22.000 36.000 39.000 23.000 19.000 19.000</span></a>
+<a class="sourceLine" id="cb7-5" title="5"><span class="co">#&gt; N_GroupB    21.000 21.000 20.000 17.000 17.000 20.000</span></a>
+<a class="sourceLine" id="cb7-6" title="6"><span class="co">#&gt; N_GroupC    18.000 27.000 25.000 26.000 31.000 36.000</span></a>
+<a class="sourceLine" id="cb7-7" title="7"><span class="co">#&gt; N_GroupD    35.000 30.000 39.000 30.000 35.000 19.000</span></a>
+<a class="sourceLine" id="cb7-8" title="8"><span class="co">#&gt; N_GroupE    21.000 21.000 24.000 20.000 22.000 38.000</span></a>
+<a class="sourceLine" id="cb7-9" title="9"><span class="co">#&gt; Freq_GroupA  0.727  0.806  0.615  0.652  0.316  0.526</span></a>
+<a class="sourceLine" id="cb7-10" title="10"><span class="co">#&gt; Freq_GroupB  0.571  0.952  0.600  0.882  1.000  0.500</span></a>
+<a class="sourceLine" id="cb7-11" title="11"><span class="co">#&gt; Freq_GroupC  0.611  0.593  0.560  0.538  0.645  0.750</span></a>
+<a class="sourceLine" id="cb7-12" title="12"><span class="co">#&gt; Freq_GroupD  0.886  0.633  0.359  0.400  0.857  0.579</span></a>
+<a class="sourceLine" id="cb7-13" title="13"><span class="co">#&gt; Freq_GroupE  0.571  0.714  0.625  0.800  0.500  0.447</span></a></code></pre></div>
+<p><code>Trait1</code> (which could be observed on only 8 individuals in Group B), <code>Trait5</code> and <code>Trait8</code> (whose variation in frequencies was not significant among groups) were removed from the data.</p>
+</div>
+<div id="compute-to-mean-measure-of-divergence" class="section level2">
+<h2><span class="header-section-number">2.3</span> Compute to Mean Measure of Divergence</h2>
+<p>Once the trait selection has been performed, the MMD can be computed with the <code>mmd</code> function. With the following instruction, the MMD is computed using Anscombe’s angular transformation of trait frequencies:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb8-1" title="1">mmd.result &lt;-<span class="st"> </span><span class="kw">mmd</span>(tab_selected<span class="op">$</span>filtered, <span class="dt">angular =</span> <span class="st">&quot;Anscombe&quot;</span>)</a>
+<a class="sourceLine" id="cb8-2" title="2">mmd.result</a>
+<a class="sourceLine" id="cb8-3" title="3"><span class="co">#&gt; $MMDMatrix</span></a>
+<a class="sourceLine" id="cb8-4" title="4"><span class="co">#&gt;        GroupA GroupB GroupC GroupD  GroupE</span></a>
+<a class="sourceLine" id="cb8-5" title="5"><span class="co">#&gt; GroupA 0.0000 0.4502 0.0831 0.2784 -0.0154</span></a>
+<a class="sourceLine" id="cb8-6" title="6"><span class="co">#&gt; GroupB 0.0532 0.0000 0.3434 0.3650  0.2563</span></a>
+<a class="sourceLine" id="cb8-7" title="7"><span class="co">#&gt; GroupC 0.0456 0.0513 0.0000 0.0984  0.0596</span></a>
+<a class="sourceLine" id="cb8-8" title="8"><span class="co">#&gt; GroupD 0.0434 0.0487 0.0411 0.0000  0.2821</span></a>
+<a class="sourceLine" id="cb8-9" title="9"><span class="co">#&gt; GroupE 0.0481 0.0540 0.0469 0.0435  0.0000</span></a>
+<a class="sourceLine" id="cb8-10" title="10"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-11" title="11"><span class="co">#&gt; $MMDSym</span></a>
+<a class="sourceLine" id="cb8-12" title="12"><span class="co">#&gt;        GroupA GroupB GroupC GroupD GroupE</span></a>
+<a class="sourceLine" id="cb8-13" title="13"><span class="co">#&gt; GroupA 0.0000  0.450 0.0831 0.2784 0.0000</span></a>
+<a class="sourceLine" id="cb8-14" title="14"><span class="co">#&gt; GroupB 0.4502  0.000 0.3434 0.3650 0.2563</span></a>
+<a class="sourceLine" id="cb8-15" title="15"><span class="co">#&gt; GroupC 0.0831  0.343 0.0000 0.0984 0.0596</span></a>
+<a class="sourceLine" id="cb8-16" title="16"><span class="co">#&gt; GroupD 0.2784  0.365 0.0984 0.0000 0.2821</span></a>
+<a class="sourceLine" id="cb8-17" title="17"><span class="co">#&gt; GroupE 0.0000  0.256 0.0596 0.2821 0.0000</span></a>
+<a class="sourceLine" id="cb8-18" title="18"><span class="co">#&gt; </span></a>
+<a class="sourceLine" id="cb8-19" title="19"><span class="co">#&gt; $MMDSignif</span></a>
+<a class="sourceLine" id="cb8-20" title="20"><span class="co">#&gt;        GroupA GroupB GroupC  GroupD  GroupE  </span></a>
+<a class="sourceLine" id="cb8-21" title="21"><span class="co">#&gt; GroupA NA     &quot;0.45&quot; &quot;0.083&quot; &quot;0.278&quot; &quot;-0.015&quot;</span></a>
+<a class="sourceLine" id="cb8-22" title="22"><span class="co">#&gt; GroupB &quot;*&quot;    NA     &quot;0.343&quot; &quot;0.365&quot; &quot;0.256&quot; </span></a>
+<a class="sourceLine" id="cb8-23" title="23"><span class="co">#&gt; GroupC &quot;NS&quot;   &quot;*&quot;    NA      &quot;0.098&quot; &quot;0.06&quot;  </span></a>
+<a class="sourceLine" id="cb8-24" title="24"><span class="co">#&gt; GroupD &quot;*&quot;    &quot;*&quot;    &quot;*&quot;     NA      &quot;0.282&quot; </span></a>
+<a class="sourceLine" id="cb8-25" title="25"><span class="co">#&gt; GroupE &quot;NS&quot;   &quot;*&quot;    &quot;NS&quot;    &quot;*&quot;     NA</span></a></code></pre></div>
+<ul>
+<li>The first component, <code>$MMDMatrix</code>, follows the presentation adopted in most research articles <span class="citation">(Donlon 2000)</span>: the true MMD values are indicated above the diagonal, and their standard deviations are indicated below the diagonal.</li>
+<li>A MMD value can be considered as significant if it is greater than twice its standard deviation. Significant MMD values are indicated by a <code>*</code> in the component <code>$MMDSignif</code>.</li>
+<li>Finally, the component <code>$MMDSym</code> is a symmetrical matrix of MMD values, with a null diagonal. This matrix of dissimilarities can be used to perform a multidimensional scaling or a hierarchical clustering to visualize the distances among the groups.</li>
+</ul>
+</div>
+<div id="graphical-representations-of-mmd" class="section level2">
+<h2><span class="header-section-number">2.4</span> Graphical representations of MMD</h2>
+<div id="multidimensional-scaling" class="section level3">
+<h3><span class="header-section-number">2.4.1</span> Multidimensional scaling</h3>
+<p>Although <code>mmd.result$MMDSym</code> can perfectly be passed to your favourite function to produce a MDS plot, <code>AnthropMMD</code> also proposes a built-in function for such a graphical representation: <code>plot_mmd</code>.</p>
+<p>The MDS can be computed using the classical <code>stats::cmdscale</code> function (and the produces a metric MDS), or several variants of MDS algorithms implemented in the R package <code>smacof</code>.</p>
+<p>For instance, we plot here the MDS coordinates computed with one variant of SMACOF algorithms:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb9-1" title="1"><span class="kw">par</span>(<span class="dt">cex =</span> <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb9-2" title="2"><span class="kw">plot_mmd</span>(<span class="dt">data =</span> mmd.result<span class="op">$</span>MMDSym, <span class="dt">method =</span> <span class="st">&quot;interval&quot;</span>, </a>
+<a class="sourceLine" id="cb9-3" title="3">         <span class="dt">gof =</span> <span class="ot">TRUE</span>, <span class="dt">axes =</span> <span class="ot">TRUE</span>, <span class="dt">xlim =</span> <span class="kw">c</span>(<span class="op">-</span><span class="fl">1.2</span>, <span class="fl">0.75</span>))</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+<p>The argument <code>gof = TRUE</code> displays goodness of fits statistics for the MDS conigurations directly on the plot.</p>
+</div>
+<div id="hierarchical-clustering" class="section level3">
+<h3><span class="header-section-number">2.4.2</span> Hierarchical clustering</h3>
+<p><code>AnthropMMD</code> does not propose a built-in function for hierarchical clustering, but such a plot can easily be obtained with the usual R functions.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode r"><code class="sourceCode r"><a class="sourceLine" id="cb10-1" title="1"><span class="kw">library</span>(cluster)</a>
+<a class="sourceLine" id="cb10-2" title="2"><span class="kw">par</span>(<span class="dt">cex =</span> <span class="fl">0.8</span>)</a>
+<a class="sourceLine" id="cb10-3" title="3"><span class="kw">plot</span>(<span class="kw">agnes</span>(mmd.result<span class="op">$</span>MMDSym), <span class="dt">which.plots =</span> <span class="dv">2</span>, <span class="dt">main =</span> <span class="st">&quot;Dendrogram of MMD dissimilarities&quot;</span>)</a></code></pre></div>
+<p><img src="data:image/png;base64,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" /><!-- --></p>
+</div>
+</div>
+</div>
+<div id="references" class="section level1 unnumbered">
+<h1>References</h1>
+<div id="refs" class="references">
+<div id="ref-Donlon00">
+<p>Donlon, D. A. 2000. “The Value of Infracranial Nonmetric Variation in Studies of Modern Homo Sapiens: An Australian Focus.” <em>American Journal of Physical Anthropology</em> 113 (3): 349–68. <a href="https://doi.org/10.1002/1096-8644(200011)113:3%3C349::AID-AJPA6%3E3.0.CO;2-2">https://doi.org/10.1002/1096-8644(200011)113:3&lt;349::AID-AJPA6&gt;3.0.CO;2-2</a>.</p>
+</div>
+<div id="ref-Harris04">
+<p>Harris, E. F., and T. Sjøvold. 2004. “Calculations of Smith’s Mean Measure of Divergence for Intergroup Comparisons Using Nonmetric Data.” <em>Dental Anthropology</em> 17: 83–93.</p>
+</div>
+<div id="ref-Santos18">
+<p>Santos, Frédéric. 2018. “AnthropMMD: An R package with a graphical user interface for the mean measure of divergence.” <em>American Journal of Physical Anthropology</em> 165 (1): 200–205. <a href="https://doi.org/10.1002/ajpa.23336">https://doi.org/10.1002/ajpa.23336</a>.</p>
+</div>
+<div id="ref-Sjovold73">
+<p>Sjøvold, T. 1973. “Occurrence of Minor Non-Metrical Variants in the Skeleton and Their Quantitative Treatment for Population Comparisons.” <em>Homo</em> 24: 204–33.</p>
+</div>
+<div id="ref-Sjovold77">
+<p>———. 1977. “Non-metrical divergence between skeletal populations: the theoretical foundation and biological importance of C.A.B. Smith’s mean measure of divergence.” <em>Ossa</em> 1: 1–133.</p>
+</div>
+</div>
+</div>
+
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
