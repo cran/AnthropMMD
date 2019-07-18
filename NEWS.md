@@ -1,3 +1,9 @@
+# AnthropMMD 3.0.1 (Release date: 2019-07-16)
+
+## Minor changes
+* Fixed warning when the angular transformation is not specified in `mmd` function.
+* Fixed typos in package vignette and documentation files.
+
 # AnthropMMD 3.0.0 (Release date: 2019-07-05)
 
 ## Change in dependencies

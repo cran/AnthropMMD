@@ -9,7 +9,7 @@ options(digits = 3)
 library(AnthropMMD)
 
 ## ----eval=FALSE, include=TRUE--------------------------------------------
-#  AnthropMMD::start_mmd()
+#  start_mmd()
 
 ## ----rows.print=8--------------------------------------------------------
 data(toyMMD)
