@@ -1,3 +1,28 @@
+# AnthropMMD 4.0.2 (Release date: 2023-07-28)
+
+## Other changes
+* Fix encoding of LICENSE file.
+
+# AnthropMMD 4.0.1 (Release date: 2023-06-15)
+
+## Bug fix
+* The internal function `mmd_resample()` now handles edge cases where resampling problems could arise.
+* Fixed formula for the computation of sample sizes in `mmd_resample()`.
+
+# AnthropMMD 4.0.0 (Release date: 2023-03-06)
+
+## Requirements
+* `AnthropMMD` now depends on R >= 4.1.0.
+* New dependencies on third-party R packages (`{dplyr}`, `{MASS}`, `{rlang}`) have been added.
+
+## New features
+* The function `mmd()` now has another argument, `correct` (which defaults to `TRUE`), which allows the user to specify whether the correction for small sample sizes should be applied.
+* A bootstrap method described by [Fidalgo et al. (2022)](https://doi.org/10.1016/j.jas.2022.105545) is now available through the function `mmd_boot()`. It can be used from the command line interface only; its implemention in the graphical user interface is not planned (at least in a near future).
+
+## Other changes
+* The code of various functions (in particular `binary_to_table()`) has been refactored, and should now run faster.
+* Updated package vignette.
+
 # AnthropMMD 3.1.0 (Release date: 2020-07-17)
 
 ## Incompatible changes in the API
@@ -12,21 +37,21 @@
 # AnthropMMD 3.0.1 (Release date: 2019-07-16)
 
 ## Minor changes
-* Fixed warning when the angular transformation is not specified in `mmd` function.
+* Fixed warning when the angular transformation is not specified in `mmd()` function.
 * Fixed typos in package vignette and documentation files.
 
 # AnthropMMD 3.0.0 (Release date: 2019-07-05)
 
 ## Change in dependencies
-* Due to some new features implemented in `AnthropMMD`, the package now depends on R 3.5.0 or greater.
-* `AnthropMMD` now imports `plotrix`.
-* `AnthropMMD` now suggests `covr`, `knitr`, `rmarkdown` and `testthat`.
+* Due to some new features implemented in `AnthropMMD`, the package now depends on R >= 3.5.0.
+* `AnthropMMD` now imports `{plotrix}`.
+* `AnthropMMD` now suggests `{covr}`, `{knitr}`, `{rmarkdown}` and `{testthat}`.
 
 ## Change of License
 * `AnthropMMD` is now distributed under CeCILL 2.1 license (instead of GPL 3).
 
 ## User visible changes
-* `AnthropMMD` can now be used by command lines, and not only as an R-shiny application. The main goal is to make AnthropMMD suitable for reproducible research.
+* `AnthropMMD` can now be used by command lines, and not only as an R-shiny application. The main goal is to make `AnthropMMD` suitable for reproducible research.
 * An example data file, `toyMMD`, is now available.
 * A vignette is now available.
 * Improved display of group labels on the MDS plots.
@@ -39,7 +64,7 @@
 
 ## Bug fixes
 * The Shiny app does not crash anymore if the user specifies a wrong field separator.
-* Fix in the computation of Spearman's measure of agreement for MDS, where the distances where erroneously counted twice. Although the impact was generally negligible, this resulted in a small overestimation of the quality of agreement.
+* Fix for the computation of Spearman's measure of agreement for MDS, where distances were erroneously counted twice. Although the impact was generally negligible, this resulted in a small overestimation of the quality of agreement.
 
 # AnthropMMD 2.5.3 (Release date: 2019-03-18)
 

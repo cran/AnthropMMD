@@ -59,7 +59,7 @@ It is not necessary for the `Trait`s to be manually converted as factors prior t
 str(toyMMD)
 ```
 
-If the data were recorded as a raw binary dataset, they **must** be converted into a table of relative frequencies prior to the MMD analysis. The R function `binary_to_table` with the argument `relative = TRUE` can perform this operation:
+If the data were recorded as a raw binary dataset, they **must** be converted into a table of relative frequencies prior to the MMD analysis. The R function `binary_to_table()` with the argument `relative = TRUE` can perform this operation:
 
 ```{r}
 tab <- binary_to_table(toyMMD, relative = TRUE)
@@ -73,7 +73,7 @@ data(absolute_freqs)
 print(absolute_freqs)
 ```
 
-If there are $k$ groups in the data, the first $k$ rows (whose names must start with an `N_` prefix, followed by the group labels) indicates the sample sizes of each trait in each group, and the last $k$ rows indicates the *absolute* trait frequencies. Such a table can be directly imported by the user, but **must** be converted to *relative* trait frequencies prior to the analysis, for instance by using the function `table_relfreq`:
+If there are $k$ groups in the data, the first $k$ rows (whose names must start with an `N_` prefix, followed by the group labels) indicates the sample sizes of each trait in each group, and the last $k$ rows indicates the *absolute* trait frequencies. Such a table can be directly imported by the user, but **must** be converted to *relative* trait frequencies prior to the analysis, for instance by using the function `table_relfreq()`:
 ```{r}
 tab <- table_relfreq(absolute_freqs)
 print(tab)
@@ -87,10 +87,10 @@ A table of relative frequencies is the starting point of all subsequent analyses
 A quick summary:
 
 * if you load a raw binary dataframe, convert it to a table of relative frequencies with the function `binary_to_table(relative = TRUE)` as shown above;
-* if you load a table of absolute frequencies, convert it to a table of relative frequencies with the function `table_relfreq`.
+* if you load a table of absolute frequencies, convert it to a table of relative frequencies with the function `table_relfreq()`.
 
 ## Trait selection
-`AnthropMMD` proposes a built-in feature for trait selection, in order to discard the traits that could be observed on too few individuals, or that do not show enough variability among groups. The function `select_traits` allows such a selection according to several strategies [@Harris04; @Santos18].
+`AnthropMMD` proposes a built-in feature for trait selection, in order to discard the traits that could be observed on too few individuals, or that do not show enough variability among groups. The function `select_traits()` allows such a selection according to several strategies [@Harris04; @Santos18].
 
 For instance, with the following instruction, we can discard the traits that could be observed on at least 10 individuals *per group*, and that exhibit no significant variability in frequencies among groups according to Fisher's exact tests:
 ```{r}
@@ -101,7 +101,7 @@ tab_selected$filtered
 `Trait1` (which could be observed on only 8 individuals in Group B), `Trait5` and `Trait8` (whose variation in frequencies was not significant among groups) were removed from the data.
 
 ## Compute the mean measure of divergence
-Once the trait selection has been performed, the MMD can be computed with the `mmd` function. With the following instruction, the MMD is computed using Anscombe's angular transformation of trait frequencies:
+Once the trait selection has been performed, the MMD can be computed with the `mmd()` function. With the following instruction, the MMD is computed using Anscombe's angular transformation of trait frequencies:
 ```{r}
 mmd.result <- mmd(tab_selected$filtered, angular = "Anscombe")
 mmd.result
@@ -114,9 +114,9 @@ mmd.result
 
 ## Graphical representations of MMD
 ### Multidimensional scaling
-Although `mmd.result$MMDSym` can perfectly be passed to your favourite function to produce a MDS plot, `AnthropMMD` also proposes a built-in generic function for such a graphical representation: `plot`. 
+Although `mmd.result$MMDSym` can perfectly be passed to your favourite function to produce a MDS plot, `AnthropMMD` also proposes a built-in generic function for such a graphical representation: `plot()`. 
 
-The MDS can be computed using the classical `stats::cmdscale` function (and the produces a metric MDS), or several variants of MDS algorithms implemented in the R package `smacof`.
+The MDS can be computed using the classical `stats::cmdscale()` function (and the produces a metric MDS), or several variants of MDS algorithms implemented in the R package `smacof`.
 
 For instance, we plot here the MDS coordinates computed with one variant of SMACOF algorithms:
 ```{r}
@@ -134,5 +134,42 @@ library(cluster)
 par(cex = 0.8)
 plot(agnes(mmd.result$MMDSym), which.plots = 2, main = "Dendrogram of MMD dissimilarities")
 ```
+
+# Alternative: analysis using bootstrapped samples
+Starting with `AnthropMMD 4.0.0`, a bootstrap method introduced by Daniel Fidalgo and co-workers [@Fidalgo2021; @Fidalgo2022] is now available. Please note that:
+
+* this method is only available when the input data is a "raw binary dataset", as described earlier in this vignette (see Section 2.1.1);
+* this method requires longer computations than the standard MMD, so that it is not available through the graphical user interface.
+
+Let's start again from the dataset `toyMMD`. The first step is to perform the resampling and the MMD computations using the separate function `mmd_boot()`. @Fidalgo2022 suggest a value of `B = 100` bootstrap experiments, it is thus the default value for the corresponding argument in this function. Below, for this simple example, we will use a value of `B = 50`. Be careful: the computation time (in the current implementation) will grow quite fast for high values of `B`.
+
+Note that `mmd_boot()` takes care itself of the trait selection. All arguments usually submitted to `select_traits()` can also be passed to `mmd_boot()`; see example below.
+
+```{r}
+## Load the example data once again:
+data(toyMMD)
+## Compute MMD among bootstrapped samples:
+set.seed(2023) # set seed for reproducibility
+resboot <- mmd_boot(
+    data = toyMMD,
+    B = 50, # number of bootstrap samples
+    angular = "Anscombe",
+    strategy = "keepFisher", # strategy for trait selection
+    k = 10 # minimal number of observations required per trait
+)
+```
+
+Now you can simply `plot()` the result of your computations, and set various parameters to customize your plot:
+```{r}
+## MDS plot for bootstrapped samples:
+plot(
+    x = resboot,
+    method = "interval", # algorithm used for MDS computation
+    level = 0.95, # confidence level for the contour lines
+    gof = TRUE # display goodness of fit statistic
+)
+```
+
+This plot displays the contour lines of a 2D kernel density estimation, as in Figure 3 from @Fidalgo2022.
 
 # References

@@ -12,13 +12,19 @@
 }
 
 \usage{
-mmd(data, angular = c("Anscombe", "Freeman"))
+mmd(data, angular = c("Anscombe", "Freeman"), correct = TRUE,
+    all.results = TRUE)
 }
 
 \arguments{
   \item{data}{A table of sample sizes and frequencies}
   \item{angular}{Choice of a formula for angular transformation: either
     Anscombe or Freeman-Tukey transformation.}
+  \item{correct}{Boolean; whether to apply the correction for small
+    sample sizes (should be \code{TRUE} for most use cases).}
+  \item{all.results}{Boolean; whether to compute all four matrices
+    described below as results. If FALSE, only the matrix \code{MMDMatrix}
+    is computed. (This argument should be \code{TRUE} for most use cases).}
 }
 
 \value{A list with four components:

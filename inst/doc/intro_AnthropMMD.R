@@ -48,3 +48,25 @@ library(cluster)
 par(cex = 0.8)
 plot(agnes(mmd.result$MMDSym), which.plots = 2, main = "Dendrogram of MMD dissimilarities")
 
+## -----------------------------------------------------------------------------
+## Load the example data once again:
+data(toyMMD)
+## Compute MMD among bootstrapped samples:
+set.seed(2023) # set seed for reproducibility
+resboot <- mmd_boot(
+    data = toyMMD,
+    B = 50, # number of bootstrap samples
+    angular = "Anscombe",
+    strategy = "keepFisher", # strategy for trait selection
+    k = 10 # minimal number of observations required per trait
+)
+
+## -----------------------------------------------------------------------------
+## MDS plot for bootstrapped samples:
+plot(
+    x = resboot,
+    method = "interval", # algorithm used for MDS computation
+    level = 0.95, # confidence level for the contour lines
+    gof = TRUE # display goodness of fit statistic
+)
+

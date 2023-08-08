@@ -4,6 +4,8 @@ theta <- function(n, p, choice = c("Anscombe", "Freeman")) {
 ### p: relative frequency for the given trait
 ### choice: variant of angular transformation to be used
 
+    choice <- match.arg(choice)
+    
     if (choice == "Anscombe") {
         return(asin((n/(n+3/4)) * (1-2*p)))
     } else { # Freeman-Tukey
@@ -15,13 +17,17 @@ sd_mmd <- function(nA, nB) {
 ### nA & nB: sample sizes in the groups A et B
     return((1 / (nA + 0.5) + 1 / (nB + 0.5))^2)
 }
-                           
-compute_md <- function(nA, pA, nB, pB) {
+
+compute_md <- function(nA, pA, nB, pB, correct = TRUE) {
 ### Computes the measure of divergence for one given trait
 ### nA & nB: sample sizes in the groups A et B
 ### pA & pB: *transformed* trait frequencies in the groups A et B
-### choice: variant of angular transformation to be used
-    return((pA - pB)^2 - sqrt(sd_mmd(nA, nB)))
+### correct: boolean; correction for small sample sizes.
+    if (correct) {
+        return((pA - pB)^2 - sqrt(sd_mmd(nA, nB)))
+    } else {
+        return((pA - pB)^2)
+    }
 }
 
 mds_rho <- function(mmd, coor) {

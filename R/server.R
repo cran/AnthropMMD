@@ -1,5 +1,5 @@
 server <- shinyServer(function(input, output, session) {
- 
+
     myenvg = new.env() # package environement, will contain the dataset (seen as a global variable)
 
 #################################################
@@ -8,17 +8,30 @@ server <- shinyServer(function(input, output, session) {
     observeEvent(input$loadData, {
         if (! is.null(input$file$name)) { # check that the user has indeed loaded a file!
             if (input$typeData == "raw") { # this dataset is a binary dataset
-                dat <- read.table(input$file$datapath, header = input$colNamesRaw, sep = input$fieldSepRaw, na.strings = input$charNA)
+                dat <- read.table(
+                    file = input$file$datapath,
+                    header = input$colNamesRaw,
+                    sep = input$fieldSepRaw,
+                    na.strings = input$charNA,
+                    stringsAsFactors = TRUE # useful for R >= 4.0.0
+                )
                 if (input$rowNames) { # if the dataset includes row names, then remove them (they are useless in the MMD workflow)
-                    dat[ , 1] <- NULL
+                    dat[, 1] <- NULL
                 }
-		if (ncol(dat) > 2) {
-                    dat[ , 1] <- factor(dat[ , 1]) # to be sure that the first column (group indicator) will be recognized as a factor, even if the labels are numeric ('1', '2', etc.)
+                if (ncol(dat) > 2) {
+                    ## make sure that the first column (group indicator) will be recognized as a factor,
+                    ## even if the labels are numeric ('1', '2', etc.):
+                    dat[, 1] <- factor(dat[, 1])
                 } else {
                     showModal(modalDialog(title = "Error", "Invalid file or invalid settings: less than two columns could be found in the data file. Please check the field separator.", easyClose = TRUE))
                 }
             } else if (input$typeData == "table") { # this dataset is already a table of frequencies
-                dat <- read.table(input$file$datapath, header = input$colNamesTable, row.names = 1, sep = input$fieldSepTable)
+                dat <- read.table(
+                    file = input$file$datapath,
+                    header = input$colNamesTable,
+                    row.names = 1,
+                    sep = input$fieldSepTable
+                )
             }
             if (valid_data_mmd(dat, type = input$typeData)) { # quick checks: is it a valid data file?
                 groups <- extract_groups(dat, type = input$typeData) # retrieve the groups from the data file

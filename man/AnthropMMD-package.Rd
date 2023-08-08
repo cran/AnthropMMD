@@ -3,7 +3,7 @@
 \alias{AnthropMMD}
 \docType{package}
 \title{
-  An R package for Smith's Mean Measure of Divergence (MMD)
+  An R package for the Mean Measure of Divergence (MMD)
 }
 \description{
   Offers a graphical user interface for the calculation of the mean
@@ -14,7 +14,7 @@
   \tabular{ll}{
     Package: \tab AnthropMMD\cr
     Type: \tab Package\cr
-    Version: \tab 3.1.0\cr
+    Version: \tab 4.0.0\cr
     License: \tab CeCILL 2.1\cr
   }
 }

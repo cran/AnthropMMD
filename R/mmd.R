@@ -1,65 +1,72 @@
-mmd <- function(data, angular = c("Anscombe", "Freeman")) {
+mmd <- function(data, angular = c("Anscombe", "Freeman"), correct = TRUE,
+                all.results = TRUE) {
 ### data: table of group sample sizes and frequencies,
 ###       such as returned by the function table_relfreq
 ### angular: choice of a formula for angular transformation
+### correct: boolean; whether to apply the correction for small samples
+### all.results: boolean; if FALSE, only the symmetrical MMD matrix is computed
 
     angular <- match.arg(angular) # avoid a warning if no arg is given
 
     ##################################################
     ## 1. Define some useful constants and matrices ##
     ##################################################
-    nb_groups <- nrow(data) / 2
-    nb_traits <- ncol(data)
+    ngroups <- nrow(data) / 2
+    ntraits <- ncol(data)
     ## portion of the data corresponding to the sample sizes:
-    mat_size <- data[1:nb_groups, ]
-    group_names <- rownames(mat_size)
+    matsize <- data[1:ngroups, ]
+    groupnames <- rownames(matsize)
     ## portion of the data corresponding to the relative frequencies:
-    mat_freq <- data[(nb_groups + 1):(2 * nb_groups), ]
+    matfreq <- data[-c(1:ngroups), ]
     ## angular transformation of relative frequencies:
-    for (i in 1:nb_groups) {
-        for (j in 1:nb_traits) {
-            mat_freq[i, j] <- theta(n = mat_size[i, j],
-                                    p = mat_freq[i, j],
-                                    choice = angular)
-        }
+    for (j in 1:ntraits) {
+        matfreq[, j] <- mapply(
+            n = matsize[, j],
+            p = matfreq[, j],
+            FUN = theta,
+            MoreArgs = list(choice = angular)
+        )
     }
 
     #######################################
     ## 2. Initialize some empty matrices ##
     #######################################
     ## MMD matrix (symmetrical):
-    mmd_sym <- matrix(NA, nrow = nb_groups, ncol = nb_groups)
+    mmd_sym <- matrix(NA, nrow = ngroups, ncol = ngroups)
     ## the rows and columns of mmd_sym are labeled according to group names:
-    dimnames(mmd_sym) <- list(substr(group_names, 3, nchar(group_names)),
-                              substr(group_names, 3, nchar(group_names)))
+    colnames(mmd_sym) <- substr(groupnames, 3, nchar(groupnames))
+    rownames(mmd_sym) <- colnames(mmd_sym)
     ## Other matrices:
     pval_matrix <- sd_matrix <- signif_matrix <- mmd_sym
 
     #############################
     ## 3. Fill in the matrices ##
     #############################
-    for (i in 1:nb_groups) {
-        for (j in 1:nb_groups) { # For each pair of groups (i, j)...
-            mmd_vect <- sd_vect <- rep(NA, nb_traits)
+    for (i in 1:ngroups) {
+        for (j in 1:ngroups) { # For each pair of groups (i, j)...
+            mmd_vect <- sd_vect <- rep(NA, ntraits)
             sum_pval <- 0
-            for (k in 1:nb_traits) { # and for each trait k,
+            for (k in 1:ntraits) { # and for each trait k,
                 ## Compute the measure of divergence on trait k:
-                mmd_vect[k] <- compute_md(nA = mat_size[i, k],
-                                          pA = mat_freq[i, k],
-                                          nB = mat_size[j, k],
-                                          pB = mat_freq[j, k])
-                ## Compute the SD for this trait:
-                sd_vect[k] <- sd_mmd(nA = mat_size[i, k], nB = mat_size[j, k])
-                ## Intermediate result for computing the p-value:
-                sum_pval <- sum_pval + ((mat_freq[i, k] - mat_freq[j, k])^2 / (1 / (mat_size[i, k] + 0.5) + 1 / (mat_size[j, k] + 0.5)))
+                mmd_vect[k] <- compute_md(nA = matsize[i, k],
+                                          pA = matfreq[i, k],
+                                          nB = matsize[j, k],
+                                          pB = matfreq[j, k],
+                                          correct = correct)
+                if (all.results) {
+                    ## Compute the SD for this trait:
+                    sd_vect[k] <- sd_mmd(nA = matsize[i, k], nB = matsize[j, k])
+                    ## Intermediate result for computing the p-value:
+                    sum_pval <- sum_pval + ((matfreq[i, k] - matfreq[j, k])^2 / (1 / (matsize[i, k] + 0.5) + 1 / (matsize[j, k] + 0.5)))
+                }
             }
             ## The MMD is the mean of those MD values:
             mmd_sym[i, j] <- max(mean(mmd_vect), 0) # replace by 0 if negative
-            if (i != j) { # avoid NaN when comparing a group to itself
+            if (all.results & (i != j)) { # avoid NaN when comparing a group to itself
                 ## The associated SD is as follows:
-                sd_matrix[i, j] <- sqrt(2 * sum(sd_vect)) / nb_traits
+                sd_matrix[i, j] <- sqrt(2 * sum(sd_vect)) / ntraits
                 ## The associated p-value:
-                pval_matrix[i, j] <- pchisq(sum_pval, df = nb_traits,
+                pval_matrix[i, j] <- pchisq(sum_pval, df = ntraits,
                                             lower.tail = FALSE)
                 ## And finally the significance ('*' or 'NS'):
                 signif_matrix[i, j] <- ifelse(pval_matrix[i, j] < 0.05, "*", "NS")
@@ -71,10 +78,12 @@ mmd <- function(data, angular = c("Anscombe", "Freeman")) {
     #################################################
     ## 4. Prepare the matrices for elegant display ##
     #################################################
-    pval_matrix <- mix_matrices(m = mmd_sym, n = pval_matrix, diag_value = NA)
     mmd_matrix <- mix_matrices(m = mmd_sym, n = sd_matrix, diag_value = 0)
-    signif_matrix <- mix_matrices(m = round(mmd_sym, 3), n = signif_matrix,
-                                  diag_value = NA)
+    if (all.results) {
+        pval_matrix <- mix_matrices(m = mmd_sym, n = pval_matrix, diag_value = NA)
+        signif_matrix <- mix_matrices(m = round(mmd_sym, 3), n = signif_matrix,
+                                      diag_value = NA)
+    }
 
     ###########################
     ## 5. Return the results ##
