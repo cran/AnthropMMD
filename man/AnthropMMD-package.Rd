@@ -10,14 +10,6 @@
   measure of divergence, with facilities for trait selection and
   graphical representations.
 }
-\details{
-  \tabular{ll}{
-    Package: \tab AnthropMMD\cr
-    Type: \tab Package\cr
-    Version: \tab 4.0.0\cr
-    License: \tab CeCILL 2.1\cr
-  }
-}
 \author{
   Frédéric Santos, \email{frederic.santos@u-bordeaux.fr}
 }
@@ -41,6 +33,11 @@
   interface for the mean measure of divergence. \emph{American Journal
   of Physical Anthropology}, \bold{165}(1), 200--205. doi:
   10.1002/ajpa.23336
+
+  Fidalgo, D., Hubbe, M. and Wesolowski, V. (2021) Population History
+  of Brazilian South and Southeast Shellmound Builders Inferred through
+  Dental Morphology. \emph{American Journal of Physical Anthropology},
+  \bold{176}(2), 192--207. doi: 10.1002/ajpa.24342
 }
 \concept{MMD}
 \concept{mean measure of divergence}

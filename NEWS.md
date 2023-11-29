@@ -1,7 +1,13 @@
+# AnthropMMD 4.0.3 (Release date: 2023-11-29)
+
+## Other changes
+* Fixed man page of package (version mismatch)
+* New reference added in man pages
+
 # AnthropMMD 4.0.2 (Release date: 2023-07-28)
 
 ## Other changes
-* Fix encoding of LICENSE file.
+* Fixed encoding of LICENSE file.
 
 # AnthropMMD 4.0.1 (Release date: 2023-06-15)
 
