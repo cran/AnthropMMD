@@ -1,3 +1,12 @@
+# AnthropMMD 4.1.0 (Release date: 2025-10-21)
+
+* In the user-interface, the "significance" of MMDs are now decided using Sjovold's rule-of-thumb (the MMD value must be greater than twice its standard deviation). The p-values are not used for that purpose anymore, since their validity is still highly discussed in the literature, and relies on often unrealistic hypotheses.
+* In the same spirit, p-values have now been totally removed from the package. `{AnthropMMD}` now only provides ratios MMD/sd(MMD), as in Bertsatos' Octave script (see Bertsatos & Chovalopoulou, 2016).
+
+## Other minor changes
+* More unit tests have been added, and some unit tests have been rewritten.
+* A `codemeta.json` file has been added to provide a better structure for the package's metadata.
+
 # AnthropMMD 4.0.3 (Release date: 2023-11-29)
 
 ## Other changes

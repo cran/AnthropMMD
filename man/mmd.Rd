@@ -35,8 +35,8 @@ mmd(data, angular = c("Anscombe", "Freeman"), correct = TRUE,
     values are replaced by zeroes.}
   \item{MMDSignif}{A matrix where any pair of traits having a
     significant MMD value is indicated by a star, \sQuote{*}.}
-  \item{MMDpval}{A matrix filled with MMD values above the diagonal, and
-    p-values below the diagonal.}
+  \item{MMDRatio}{A matrix filled with MMD values above the diagonal, and
+    ratios MMD/sd(MMD) below the diagonal.}
 }
 
 \references{

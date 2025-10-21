@@ -9,7 +9,7 @@ options(digits = 3)
 library(AnthropMMD)
 
 ## ----eval=FALSE, include=TRUE-------------------------------------------------
-#  start_mmd()
+# start_mmd()
 
 ## ----rows.print=8-------------------------------------------------------------
 data(toyMMD)
@@ -20,7 +20,7 @@ str(toyMMD)
 
 ## -----------------------------------------------------------------------------
 tab <- binary_to_table(toyMMD, relative = TRUE)
-tab
+print(tab)
 
 ## -----------------------------------------------------------------------------
 data(absolute_freqs)
@@ -32,7 +32,7 @@ print(tab)
 
 ## -----------------------------------------------------------------------------
 tab_selected <- select_traits(tab, k = 10, strategy = "keepFisher")
-tab_selected$filtered
+print(tab_selected$filtered)
 
 ## -----------------------------------------------------------------------------
 mmd.result <- mmd(tab_selected$filtered, angular = "Anscombe")

@@ -15,6 +15,7 @@ theta <- function(n, p, choice = c("Anscombe", "Freeman")) {
 
 sd_mmd <- function(nA, nB) {
 ### nA & nB: sample sizes in the groups A et B
+### (note: actually computes the variance, not the sd)
     return((1 / (nA + 0.5) + 1 / (nB + 0.5))^2)
 }
 

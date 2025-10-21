@@ -28,14 +28,15 @@ library(AnthropMMD)
 
 # Graphical user interface
 
-`AnthropMMD` was primarily designed as an R-Shiny application [@Santos18], that can be launched with the following instruction:
+`{AnthropMMD}` was primarily designed as an R-Shiny application [@Santos18], that can be launched with the following instruction:
+
 ```{r eval=FALSE, include=TRUE}
 start_mmd()
 ```
 
 Starting with the version 3.0.0, it can also be used from the command line, to make it convenient in a context of reproducible research.
 
-# Using `AnthropMMD` from the command line
+# Using `{AnthropMMD}` from the command line
 
 ## Data formatting
 
@@ -63,17 +64,19 @@ If the data were recorded as a raw binary dataset, they **must** be converted in
 
 ```{r}
 tab <- binary_to_table(toyMMD, relative = TRUE)
-tab
+print(tab)
 ```
 
 ### Tables of sample sizes and absolute frequencies
 Sometimes, in particular if the data were extracted from research articles rather than true exprimentation, the user will only know the sample sizes and absolute trait frequencies in each group. As previously stated, those data are perfectly sufficient to compute MMD values. Here is an example of such a table:
+
 ```{r}
 data(absolute_freqs)
 print(absolute_freqs)
 ```
 
 If there are $k$ groups in the data, the first $k$ rows (whose names must start with an `N_` prefix, followed by the group labels) indicates the sample sizes of each trait in each group, and the last $k$ rows indicates the *absolute* trait frequencies. Such a table can be directly imported by the user, but **must** be converted to *relative* trait frequencies prior to the analysis, for instance by using the function `table_relfreq()`:
+
 ```{r}
 tab <- table_relfreq(absolute_freqs)
 print(tab)
@@ -90,35 +93,38 @@ A quick summary:
 * if you load a table of absolute frequencies, convert it to a table of relative frequencies with the function `table_relfreq()`.
 
 ## Trait selection
-`AnthropMMD` proposes a built-in feature for trait selection, in order to discard the traits that could be observed on too few individuals, or that do not show enough variability among groups. The function `select_traits()` allows such a selection according to several strategies [@Harris04; @Santos18].
+`{AnthropMMD}` proposes a built-in feature for trait selection, in order to discard the traits that could be observed on too few individuals, or that do not show enough variability among groups. The function `select_traits()` allows such a selection according to several strategies [@Harris04; @Santos18].
 
 For instance, with the following instruction, we can discard the traits that could be observed on at least 10 individuals *per group*, and that exhibit no significant variability in frequencies among groups according to Fisher's exact tests:
+
 ```{r}
 tab_selected <- select_traits(tab, k = 10, strategy = "keepFisher")
-tab_selected$filtered
+print(tab_selected$filtered)
 ```
 
 `Trait1` (which could be observed on only 8 individuals in Group B), `Trait5` and `Trait8` (whose variation in frequencies was not significant among groups) were removed from the data.
 
 ## Compute the mean measure of divergence
 Once the trait selection has been performed, the MMD can be computed with the `mmd()` function. With the following instruction, the MMD is computed using Anscombe's angular transformation of trait frequencies:
+
 ```{r}
 mmd.result <- mmd(tab_selected$filtered, angular = "Anscombe")
 mmd.result
 ```
 
 * The first component, `$MMDMatrix`, follows the presentation adopted in most research articles [@Donlon00]: the true MMD values are indicated above the diagonal, and their standard deviations are indicated below the diagonal.
-* A MMD value can be considered as significant if it is greater than twice its standard deviation. Significant MMD values are indicated by a `*` in the component `$MMDSignif`.
+* A MMD value can be considered as significant if it is greater than twice its standard deviation. Significant MMD values are indicated by a `*` in the component `$MMDSignif`. (A "significant" MMD is greater than twice its standard deviation.)
 * The component `$MMDSym` is a symmetrical matrix of MMD values, with a null diagonal. This matrix of dissimilarities can be used to perform a multidimensional scaling or a hierarchical clustering to visualize the distances among the groups.
-* Finally, p-values for non-nullity of each MMD value are given (in the lower triangular part of the matrix returned) by the component `$MMDpval`. Theoretical details for this test of significance can be found in @Souza77.
+* Finally, starting with `{AnthropMMD}` version 4.1.0, no p-values are not given by the package, since there are controversies about their validity and and the hypotheses they require. Instead, `{AnthropMMD}` now follows the same approach as in @Bertsatos2016, i.e., only gives ratios of $MMD / \text{sd}(MMD)$, in the component `$MMDRatio`. Significance tests can be constructed from these values, as explained for instance in @Souza77, but this is now entirely left to the end-user of the package.
 
 ## Graphical representations of MMD
 ### Multidimensional scaling
-Although `mmd.result$MMDSym` can perfectly be passed to your favourite function to produce a MDS plot, `AnthropMMD` also proposes a built-in generic function for such a graphical representation: `plot()`. 
+Although `mmd.result$MMDSym` can perfectly be passed to your favourite function to produce a MDS plot, `{AnthropMMD}` also proposes a built-in generic function for such a graphical representation: `plot()`. 
 
-The MDS can be computed using the classical `stats::cmdscale()` function (and the produces a metric MDS), or several variants of MDS algorithms implemented in the R package `smacof`.
+The MDS can be computed using the classical `stats::cmdscale()` function (and the produces a metric MDS), or several variants of MDS algorithms implemented in the R package `{smacof}`.
 
 For instance, we plot here the MDS coordinates computed with one variant of SMACOF algorithms:
+
 ```{r}
 par(cex = 0.8)
 plot(x = mmd.result, method = "interval", 
@@ -128,7 +134,8 @@ plot(x = mmd.result, method = "interval",
 The argument `gof = TRUE` displays goodness of fits statistics for the MDS configurations directly on the plot.
 
 ### Hierarchical clustering
-`AnthropMMD` does not propose a built-in function for hierarchical clustering, but such a plot can easily be obtained with the usual R functions.
+`{AnthropMMD}` does not propose a built-in function for hierarchical clustering, but such a plot can easily be obtained with the usual R functions.
+
 ```{r}
 library(cluster)
 par(cex = 0.8)
@@ -136,7 +143,7 @@ plot(agnes(mmd.result$MMDSym), which.plots = 2, main = "Dendrogram of MMD dissim
 ```
 
 # Alternative: analysis using bootstrapped samples
-Starting with `AnthropMMD 4.0.0`, a bootstrap method introduced by Daniel Fidalgo and co-workers [@Fidalgo2021; @Fidalgo2022] is now available. Please note that:
+Starting with `{AnthropMMD}` version 4.0.0, a bootstrap method introduced by Daniel Fidalgo and co-workers [@Fidalgo2021; @Fidalgo2022] is now available. Please note that:
 
 * this method is only available when the input data is a "raw binary dataset", as described earlier in this vignette (see Section 2.1.1);
 * this method requires longer computations than the standard MMD, so that it is not available through the graphical user interface.
@@ -160,6 +167,7 @@ resboot <- mmd_boot(
 ```
 
 Now you can simply `plot()` the result of your computations, and set various parameters to customize your plot:
+
 ```{r}
 ## MDS plot for bootstrapped samples:
 plot(

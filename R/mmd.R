@@ -37,7 +37,7 @@ mmd <- function(data, angular = c("Anscombe", "Freeman"), correct = TRUE,
     colnames(mmd_sym) <- substr(groupnames, 3, nchar(groupnames))
     rownames(mmd_sym) <- colnames(mmd_sym)
     ## Other matrices:
-    pval_matrix <- sd_matrix <- signif_matrix <- mmd_sym
+    ratio_matrix <- sd_matrix <- signif_matrix <- mmd_sym
 
     #############################
     ## 3. Fill in the matrices ##
@@ -56,8 +56,6 @@ mmd <- function(data, angular = c("Anscombe", "Freeman"), correct = TRUE,
                 if (all.results) {
                     ## Compute the SD for this trait:
                     sd_vect[k] <- sd_mmd(nA = matsize[i, k], nB = matsize[j, k])
-                    ## Intermediate result for computing the p-value:
-                    sum_pval <- sum_pval + ((matfreq[i, k] - matfreq[j, k])^2 / (1 / (matsize[i, k] + 0.5) + 1 / (matsize[j, k] + 0.5)))
                 }
             }
             ## The MMD is the mean of those MD values:
@@ -65,11 +63,10 @@ mmd <- function(data, angular = c("Anscombe", "Freeman"), correct = TRUE,
             if (all.results & (i != j)) { # avoid NaN when comparing a group to itself
                 ## The associated SD is as follows:
                 sd_matrix[i, j] <- sqrt(2 * sum(sd_vect)) / ntraits
-                ## The associated p-value:
-                pval_matrix[i, j] <- pchisq(sum_pval, df = ntraits,
-                                            lower.tail = FALSE)
+                ## The ratio MMD / sd(MMD):
+                ratio_matrix[i, j] <- mmd_sym[i, j] / sd_matrix[i, j]
                 ## And finally the significance ('*' or 'NS'):
-                signif_matrix[i, j] <- ifelse(pval_matrix[i, j] < 0.05, "*", "NS")
+                signif_matrix[i, j] <- ifelse(mmd_sym[i, j] >= 2 * sd_matrix[i, j], "*", "NS")
             }
         }
     }
@@ -80,7 +77,7 @@ mmd <- function(data, angular = c("Anscombe", "Freeman"), correct = TRUE,
     #################################################
     mmd_matrix <- mix_matrices(m = mmd_sym, n = sd_matrix, diag_value = 0)
     if (all.results) {
-        pval_matrix <- mix_matrices(m = mmd_sym, n = pval_matrix, diag_value = NA)
+        ratio_matrix <- mix_matrices(m = mmd_sym, n = ratio_matrix, diag_value = NA)
         signif_matrix <- mix_matrices(m = round(mmd_sym, 3), n = signif_matrix,
                                       diag_value = NA)
     }
@@ -91,7 +88,7 @@ mmd <- function(data, angular = c("Anscombe", "Freeman"), correct = TRUE,
     list_results <- list(MMDMatrix = round(mmd_matrix, 6),
                          MMDSym = round(mmd_sym, 6),
                          MMDSignif = signif_matrix,
-                         MMDpval = round(pval_matrix, 4))
+                         MMDRatio = round(ratio_matrix, 4))
     class(list_results) <- "anthropmmd_result"
     return(list_results)
 }
